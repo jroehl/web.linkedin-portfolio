@@ -1,0 +1,13 @@
+mixin ieStyle(condition)
+  | <!--[!{condition}]>
+  link(rel='stylesheet', href='src/styles/ie.css')
+  | <![endif]-->
+
+mixin ieElements()
+  div.browser(
+      style='display: none;'
+    )
+      h1
+        a(href='http://browsehappy.com/' target='_blank') PLEASE UPGRADE YOUR BROWSER
+      h2
+        a(href='http://browsehappy.com/' target='_blank') (and activate javascript)

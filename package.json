@@ -1,0 +1,46 @@
+{
+  "name": "web.linkedin-portfolio",
+  "version": "1.0.0",
+  "description": "Personal LinkedIn website - facilitating the LinkedIn export function",
+  "main": "templates/index.pug",
+  "scripts": {
+    "start": "rimraf .cache && npm run fetch_data && parcel templates/index.pug templates/404.pug",
+    "fetch_data": "node bin/fetchData.js",
+    "build": "rimraf dist && npm run fetch_data && parcel build templates/index.pug templates/404.pug && npm run generate_meta_files",
+    "generate_meta_files": "node bin/generateMetaFiles.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jroehl/web.linkedin-portfolio.git"
+  },
+  "keywords": [
+    "linkedin",
+    "netlify",
+    "personal-website",
+    "linkedin-website",
+    "portfolio-website",
+    "portfolio"
+  ],
+  "author": "jroehl <mail@johannroehl.de>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jroehl/web.linkedin-portfolio/issues"
+  },
+  "homepage": "https://github.com/jroehl/web.linkedin-portfolio#readme",
+  "devDependencies": {
+    "parcel-bundler": "^1.12.0"
+  },
+  "dependencies": {
+    "autoprefixer": "^9.5.0",
+    "dotenv": "^7.0.0",
+    "google-spreadsheet": "^2.0.7",
+    "gravatar": "^1.8.0",
+    "hammerjs": "^2.0.8",
+    "lodash": "^4.17.11",
+    "postcss-modules": "^1.4.1",
+    "pug": "^2.0.3",
+    "rimraf": "^2.6.3",
+    "spectre.css": "^0.5.8"
+  }
+}

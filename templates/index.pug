@@ -1,0 +1,58 @@
+include ./sections.pug
+include ./ie.pug
+
+-
+  const {
+    PROFILE: {
+      values: [profile],
+    },
+    EMAIL_ADDRESSES: {
+      values: [email],
+    },
+  } = data;
+
+  const name = getName(profile);
+doctype html
+html(class="no-js", lang="en")
+  head
+    title=`${name} - ${profile.headline}`
+    meta(charset='utf-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1, user-scalable=no')
+    meta(name='description', content=profile.summary)
+    meta(name='author', content=name)
+    +ieStyle('if lte IE 11')
+    link(rel="stylesheet", href="../styles/index.css")
+    link(rel="stylesheet", href="../styles/media.css")
+    link(rel="shortcut icon" href=email.favicon)
+    link(
+      rel='stylesheet',
+      href='https://use.fontawesome.com/releases/v5.7.2/css/all.css',
+      integrity='sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr',
+      crossorigin='anonymous'
+    )
+  body
+    +ieElements()
+    main
+      section.background
+        div.container(
+            style={
+              height: `calc(${100 - meta.sections.length * 5}% - 3.2rem)`,
+            }
+          )
+          header.animated-load
+            div
+              h1=name
+              h2=profile.headline
+            figure.avatar.avatar-xl
+              img(src=email.gravatar)
+          div.animated-load
+            span
+              blockquote=profile.summary
+            span
+              +router('EMAIL_ADDRESSES')
+              +router('PROFILE')
+      span.sections
+        each section, i in meta.sections.reverse()
+          +renderSection(section, i + 1)
+
+    script(src='../src/index.js')

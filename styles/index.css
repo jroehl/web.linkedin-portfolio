@@ -1,0 +1,212 @@
+@import url('https://fonts.googleapis.com/css?family=Space+Mono');
+
+@import '../node_modules/spectre.css/dist/spectre.min.css';
+@import '../node_modules/spectre.css/dist/spectre-exp.min.css';
+
+html {
+  --bg-color: black;
+  --transition-timing: cubic-bezier(0.42, 0, 0.6, 1.05);
+}
+
+html,
+body,
+main {
+  height: 100%;
+  overflow: hidden;
+  color: white;
+  font-size: 0.9rem;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Space Mono', monospace;
+}
+
+h1 {
+  font-size: 1.7rem;
+  margin-bottom: 0.3rem;
+}
+h2 {
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 1.1rem;
+  margin-bottom: 1.4rem;
+}
+
+h3 {
+  font-size: 1.2rem;
+}
+h4 {
+  font-size: 1rem;
+}
+
+a {
+  color: white !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+p {
+  margin-bottom: 0.2rem;
+}
+
+body {
+  background-color: var(--bg-color);
+}
+
+main {
+  height: 100%;
+  width: 100%;
+  position: relative;
+}
+
+i {
+  width: 1rem !important;
+}
+
+.container {
+  margin: 0.5rem 1.5rem;
+  width: auto;
+}
+
+section.background {
+  color: white;
+  height: 100%;
+}
+
+section.background h2 {
+  margin-bottom: 0;
+}
+
+section.background h3 {
+  padding-top: .5rem;
+}
+
+section.background div.container {
+  display: flex;
+  flex-direction: column;
+  margin-top: 1.6rem;
+  margin-bottom: 1.6rem;
+  justify-content: space-between;
+}
+
+section.background div.container > div.animated-load {
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+}
+
+section.background header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.avatar.avatar-xl {
+  height: 4rem;
+  width: 4rem;
+  flex-shrink: 0;
+}
+
+section.background blockquote {
+  margin-bottom: 1.5rem;
+  line-height: 1rem;
+}
+
+.animated-load:nth-child(1) {
+  animation: 500ms var(--transition-timing) 1200ms appear forwards;
+  opacity: 0;
+  transform: translateY(-25%);
+}
+
+.animated-load:nth-child(2) {
+  animation: 1000ms var(--transition-timing) 1700ms appear forwards;
+  opacity: 0;
+  transform: translateY(0);
+}
+
+@keyframes appear {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+section.draggable {
+  position: absolute;
+  border-top-right-radius: 5rem;
+  bottom: -300%;
+  transform: translateY(100%);
+  animation: 500ms var(--transition-timing) 1500ms sections-appear forwards;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
+}
+
+@keyframes sections-appear {
+  to {
+    transform: translateY(0);
+  }
+}
+
+section.draggable.transition {
+  transition-property: all;
+  transition-timing-function: var(--transition-timing);
+  transition-duration: 1s;
+}
+
+section.draggable article + article {
+  padding-top: 2rem;
+}
+
+.timeline .timeline-item .timeline-icon.icon-lg {
+  background: transparent;
+  border: 0.11rem solid white;
+  border-radius: 50%;
+  margin-top: 0.2rem;
+  height: 0.8rem;
+  width: 0.8rem;
+}
+
+.timeline .timeline-item::before {
+  left: 5px;
+  top: 1.2rem;
+  width: 1px;
+}
+
+.timeline .timeline-item .timeline-icon {
+  color: white;
+}
+
+.timeline .timeline-item .timeline-icon::before {
+  border-color: white;
+}
+
+p.tile-subtitle.description {
+  padding-top: 0.1rem;
+}
+
+h4.tile-title {
+  margin-top: -2px;
+}
+
+.chip {
+  color: #3b4351;
+  height: 1.4rem;
+  max-width: unset;
+}
+
+.tile-title,
+.tile.tile-centered .tile-subtitle {
+  white-space: unset !important;
+}
+.tile-subtitle.description {
+  white-space: pre-line;
+}
+
+i.contact {
+  margin-right: 1rem;
+}

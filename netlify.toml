@@ -1,0 +1,36 @@
+[build]
+  publish = "dist"
+  command = "npm run build"
+
+[template.environment]
+  SPREADSHEET_ID = "add your public google spreadsheet id here"
+
+
+####################################
+############# CONTEXTS #############
+####################################
+
+# Deploy Preview context: All Deploy Previews
+# will inherit these settings.
+[context.deploy-preview.environment]
+  BUILD_ENV = "development"
+
+# Branch context: All deploys to this branch
+# will inherit these settings.
+[context.branch-deploy.environment]
+  BUILD_ENV = "branch"
+
+# Production context: All deploys to the main
+# repository branch will inherit these settings.
+[context.production.environment]
+  BUILD_ENV = "production"
+
+#####################################
+############# REDIRECTS #############
+#####################################
+
+# Redirect all paths (except the base domain) to 404 page
+[[redirects]]
+  from = "/*"
+  to = "/404.html"
+  status = 404

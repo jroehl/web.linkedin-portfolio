@@ -1,0 +1,107 @@
+/*
+Extra small devices (portrait phones, less than 576px)
+No media query since this is the default in Bootstrap because it is "mobile first"
+*/
+.no-js section.draggable:hover {
+  top: 10% !important;
+}
+
+/* Small devices (landscape phones, 576px and up) */
+@media (min-width: 576px) {
+}
+
+/* Medium devices (tablets, 768px and up) The navbar toggle appears at this breakpoint */
+@media (min-width: 768px) {
+  .container {
+    margin: 1.2rem 3rem;
+  }
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+  .container {
+    margin: 2rem 3rem;
+  }
+  section.background div.container > div.animated-load {
+    flex-direction: column;
+    margin: 3rem 0;
+  }
+
+  section.background blockquote {
+    margin: 0;
+    max-width: 75%;
+    margin-bottom: 1.5rem;
+    line-height: unset;
+  }
+}
+
+/* Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+  i {
+    width: 2rem !important;
+  }
+  h2 {
+    font-size: 1.3rem;
+  }
+  section.background h1 {
+    font-size: 2.8rem;
+  }
+  section.background h2 {
+    font-size: 1.6rem;
+  }
+  section.background p,
+  section.background blockquote {
+    font-size: 1.4rem;
+  }
+  figure.avatar.avatar-xl {
+    height: 8rem;
+    width: 8rem;
+  }
+  section.background div.container {
+    margin: 2rem 3rem;
+    height: calc(95% - 4rem) !important;
+  }
+  span.sections {
+    position: absolute;
+    top: 95% !important;
+    display: flex;
+    flex-direction: row-reverse;
+  }
+  section.draggable {
+    cursor: pointer;
+    position: relative;
+    bottom: 0;
+    top: 0 !important;
+    flex-grow: 1;
+    flex-basis: 0;
+    border-top-right-radius: 0;
+    transition-property: all;
+    transition-duration: 500ms;
+    transition-timing-function: var(--transition-timing);
+    max-height: 100vh;
+  }
+  section.draggable:hover,
+  section.draggable.clicked {
+    top: -95vh !important;
+  }
+  section.draggable .container {
+    margin: 0.8rem 1.5rem;
+    height: 100%;
+  }
+  section.draggable article {
+    overflow-y: scroll;
+    max-height: 95%;
+  }
+}
+
+@media (min-width: 481px) and (max-width: 1024px) and (orientation: landscape) {
+  body {
+    transform: translate(-50%, -50%) rotate(90deg);
+    width: 100vh;
+    height: 100vw;
+    transform-origin: 50% 50%;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+  }
+}

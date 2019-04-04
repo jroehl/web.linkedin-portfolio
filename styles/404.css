@@ -1,0 +1,62 @@
+@import url('https://fonts.googleapis.com/css?family=Space+Mono');
+
+@import '../node_modules/spectre.css/dist/spectre.min.css';
+
+html {
+  --bg-color: black;
+}
+
+html,
+body,
+main {
+  height: 100%;
+  overflow: hidden;
+  color: white;
+  font-size: 0.9rem;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Space Mono', monospace;
+  text-align: center;
+}
+
+h4 {
+  padding-top: 2rem;
+}
+
+a {
+  color: white !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+body {
+  background-color: var(--bg-color);
+}
+
+main, article {
+  height: 100%;
+  width: 100%;
+}
+
+main {
+  background-image: url('http://thecatapi.com/api/images/get?format=src&type=gif');
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+}
+
+article {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}

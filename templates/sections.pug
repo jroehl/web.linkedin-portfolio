@@ -1,0 +1,228 @@
+include ./mixins.pug
+
+mixin renderProfile({ values, title, header })
+  article
+    - const value = values[0]
+    each item in convertArray(value.instantmessengers)
+      -
+        const { key, value: user } = item;
+        const icon = getIcon(config.icons, `${key}:${user}`);
+      p
+        i(
+          class=['contact', icon]
+        )
+        =user
+    each item in convertArray(values[0].twitterhandles)
+      -
+        const { value: handle } = item;
+      p
+        a(
+          href=`https://twitter.com/${handle}`,
+          target='_blank'
+        )
+          i.fab.fa-twitter.contact
+          =`@${handle}`
+    - const websites = convertArray(value.websites)
+    if websites.length
+      h3 urls
+    each item in convertArray(value.websites)
+      -
+        const { key, value: url } = item;
+        const icon = getIcon(config.icons, `${key}:${url}`);
+      p
+        a(
+          href=!url.startsWith('http') ? `http://${url}` : url,
+          target='_blank'
+        )
+          i(
+            class=['contact', icon]
+          )
+          =url.replace(/http[s]?:\/\//, '')
+    if value.industry || value.geolocation
+      h3 other
+    if value.industry
+      p
+        i(
+          class=['contact', config.icons.industry]
+        )
+        =value.industry
+    if value.geolocation
+      p
+        a(
+          href=`https://www.google.com/maps/search/${encodeURI(value.geolocation)}`,
+          target='_blank'
+        )
+          i(
+            class=['contact', 'fas fa-map-marker-alt']
+          )
+          =value.geolocation
+
+mixin renderEmails({ values, title, header })
+  article
+    h3 contact
+    each email in values
+      p
+        a(
+          href=`mailto:${email.emailaddress}`,
+          target='_blank'
+        )
+          i.far.fa-paper-plane.contact
+          =email.emailaddress
+
+mixin renderLanguages({ values, title, header })
+  article
+    each lang in values
+      li
+        span=lang.name
+        small.tile-subtitle.text-gray=` (${lang.proficiency})`
+
+mixin renderProjects({ values, title, header })
+  article
+    div.timeline
+      each project, i in values
+        - const id = `timeline_projects_${i}`
+        div(
+          class='timeline-item',
+          id=id
+        )
+          div.timeline-left
+            a(
+              class='timeline-icon icon-lg',
+              href=`#${id}`
+            )
+                i.icon
+          div.timeline-content
+            div.tile.tile-centered
+              div.tile-content
+                h4.tile-title=project.title
+                p.tile-subtitle.description=project.description.replace('  ', '\n\n')
+                small.tile-subtitle.text-gray
+                  =`${fromTo(project.startedon, project.finishedon)}`
+                  a(
+                    class="text-gray"
+                    href=project.url, target='_blank'
+                  )=project.url ? ` · more` : ''
+
+mixin renderEducation({ values, title, header })
+  article
+    div.timeline
+      each edu, i in values
+        - const id = `timeline_educations_${i}`
+        div(
+          class='timeline-item',
+          id=id
+        )
+          div.timeline-left
+            a(
+              class='timeline-icon icon-lg',
+              href=`${id}`
+            )
+              if !i
+                i.icon
+          div.timeline-content
+            div.tile.tile-centered
+              div.tile-content
+                h4.tile-title=edu.schoolname
+                p.tile-subtitle.description=edu.degreename
+                p.tile-subtitle.description=edu.notes.replace('  ', '\n\n')
+                small.tile-subtitle.text-gray
+                  span=fromTo(edu.startdate, edu.enddate, true)
+
+mixin renderCertifications({ values, title, header })
+  article
+    div.timeline
+      each cert, i in values
+        - const id = `timeline_certifications_${i}`
+        div(
+          class='timeline-item',
+          id=id
+        )
+          div.timeline-left
+            a(
+              class='timeline-icon icon-lg',
+              href=`#${id}`
+            )
+              if !i
+                i.icon
+          div.timeline-content
+            div.tile.tile-centered
+              div.tile-content
+                h4.tile-title=cert.name
+                p.tile-subtitle.description=`${cert.authority}${cert.url ? ` (${cert.licensenumber})` : ''}`
+                small.tile-subtitle.text-gray
+                  =fromTo(cert.startedon, cert.finishedon)
+                  a(
+                    class="text-gray"
+                    href=cert.url, target='_blank'
+                  )=cert.url ? ` · more` : ''
+
+mixin renderPositions({ values, title, header })
+  article
+    div.timeline
+      each position, i in values
+        - const id = `timeline_positions_${i}`
+        div(
+          class='timeline-item',
+          id=id
+        )
+          div.timeline-left
+            a(
+              class='timeline-icon icon-lg',
+              href=`#${id}`
+            )
+              if !i
+                i.icon
+          div.timeline-content
+            div.tile.tile-centered
+              div.tile-content
+                h4.tile-title=position.companyname
+                p.tile-subtitle.description=position.title
+                p.tile-subtitle.description=position.description.replace('  ', '\n\n')
+                small.tile-subtitle.text-gray
+                  span=`${fromTo(position.startedon, position.finishedon, true)} `
+                  span=position.location ? `· ${position.location}` : ''
+
+mixin renderSkills({ values, title, header })
+  article
+    each name in values.map(({name}) => name.trim()).sort()
+      span.chip=name
+
+mixin router(key)
+  - const partial = data[key]
+  case key
+    when 'PROFILE'
+      +renderProfile(partial)
+    when 'EMAIL_ADDRESSES'
+      +renderEmails(partial)
+    when 'LANGUAGES'
+      +renderLanguages(partial)
+    when 'PROJECTS'
+      +renderProjects(partial)
+    when 'EDUCATION'
+      +renderEducation(partial)
+    when 'CERTIFICATIONS'
+      +renderCertifications(partial)
+    when 'POSITIONS'
+      +renderPositions(partial)
+    when 'SKILLS'
+      +renderSkills(partial)
+
+mixin renderSection(section, i)
+  - const max = meta.sections.length;
+  - const revIdx = max - i;
+  section(
+    class=['draggable', 'collapsed']
+    data-index=i
+    style={
+      'background-color': section.color,
+      top: `${95 - 5 * revIdx}%`,
+      width: `${97.5 - 3 * i}%`,
+      'transition-delay': `${200 + 25 * revIdx}ms`
+    }
+  )
+    div.container
+      if section.header
+        h2=section.header
+      each key in section.keys
+        +router(key)
+      block

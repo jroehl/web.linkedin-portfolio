@@ -1,0 +1,34 @@
+include ./sections.pug
+include ./ie.pug
+
+-
+  const {
+    PROFILE: {
+      values: [profile],
+    },
+    EMAIL_ADDRESSES: {
+      values: [email],
+    },
+  } = data;
+
+  const name = getName(profile);
+doctype html
+html(lang="en")
+  head
+    title=`404 | ${name} - ${profile.headline}`
+    meta(charset='utf-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1, user-scalable=no')
+    meta(name='description', content=profile.summary)
+    meta(name='author', content=name)
+    +ieStyle('if lte IE 11')
+    link(rel="stylesheet", href="../styles/404.css")
+    link(rel="shortcut icon" href=email.favicon)
+  body
+    +ieElements()
+    main
+      article
+        h1="404 - ROUTE NOT FOUND"
+        h3
+          span=`If you think that is a mistake, please get in touch with ${name} `
+          a(href=`mailto:${email.emailaddress}`)=`<${email.emailaddress}>`
+        h4(href='/') BACK TO MAIN PAGE

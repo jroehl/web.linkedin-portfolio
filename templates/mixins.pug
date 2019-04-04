@@ -1,0 +1,38 @@
+-
+  const convertArray = str => {
+    if (!str || !str.startsWith('[') || !str.endsWith(']')) return str;
+    let match;
+    let matches = [];
+    const re = /([A-Z]+):([^,\[\]]*)?|([^,\[\]]+)/g;
+    while ((match = re.exec(str))) {
+      const [, key, value, full] = match;
+      if (full) {
+        matches = [...matches, { value: full }];
+      } else if (key && value) {
+        matches = [...matches, { key, value }];
+      }
+    }
+    return matches;
+  };
+
+  const getIcon = (icons, str) => {
+    return Object.entries(icons).reduce((red, [key, value]) => {
+      if (red) return red;
+      return str.toLowerCase().includes(key) ? value : red;
+    }, null) || icons.fallback;
+  };
+
+  const fromTo = (from, to, ongoing) => {
+    if (to) return `from ${from} to ${to}`;
+    if (ongoing) return `from ${from} (ongoing)`;
+    if (from) return from;
+    return '';
+  };
+
+  const getName = ({ firstname, lastname, maidenname }) => {
+    let name = `${firstname} ${lastname}`;
+    if (maidenname) {
+      name += ` (${maidenname})`;
+    }
+    return name;
+  };
