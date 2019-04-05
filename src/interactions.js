@@ -11,20 +11,6 @@ const collapse = target => {
 };
 
 /**
- * Expand elements by panning out of view
- * @param {HTMLElement} target
- */
-const expand = target => {
-  target.classList.add('transition', 'expanded');
-  target.classList.remove('dragging', 'collapsed');
-  const idx = target.getAttribute('data-index');
-  const offset = 10 + 5 * +idx;
-  const top = +target.style.top.match(/[-]?\d+/)[0];
-  const y = (window.innerHeight * (-top + offset)) / 100;
-  target.style.transform = `translateY(${y}px)`;
-};
-
-/**
  * Collapse all sections
  * @param {array<HTMLElement>} elements
  */
@@ -32,6 +18,17 @@ const reset = elements =>
   elements.forEach(element => {
     element.style.animation = 'unset';
     collapse(element);
+  });
+
+/**
+ * Drag section array
+ * @param {array<HTMLElement>} sections
+ * @param {string} className
+ * @param {number} deltaY
+ */
+const dragSections = (sections, className, deltaY) =>
+  sections.forEach(section => {
+    if (!section.classList.contains(className)) drag(section, deltaY);
   });
 
 /**
@@ -49,12 +46,12 @@ const drag = (section, deltaY) => {
 /**
  * Initialize the stack interaction
  * @param {string} mediaQuery
- * @param {number} [threshold=400]
+ * @param {number} [threshold=100]
  */
-module.exports = (mediaQuery, threshold = -300) => {
+module.exports = (mediaQuery, threshold = 100) => {
   const sections = Array.from(document.getElementsByTagName('section'));
   const [background, ...draggable] = sections;
-  let currentPosition = 0;
+  let initialPosition = 0;
 
   if (!background) throw new Error('No <section> tags in dom');
 
@@ -73,20 +70,14 @@ module.exports = (mediaQuery, threshold = -300) => {
   reset(draggable);
 
   /**
-   * Change all sections
-   * @param {function} execute
+   * Expand elements by panning out of view
+   * @param {HTMLElement} target
    */
-  const changeSections = shouldExpand => {
-    for (let i = draggable.length - 1; i >= 0; i--) {
-      const { classList } = draggable[i];
-      if (classList.contains('dragging')) {
-        if (shouldExpand) {
-          draggable.slice(0, i + 1).forEach(expand);
-        } else {
-          draggable.slice(i).forEach(collapse);
-        }
-      }
-    }
+  const expand = target => {
+    target.classList.add('transition', 'expanded');
+    target.classList.remove('dragging', 'collapsed');
+    const y = (window.innerHeight * (draggable.length + 1)) / -10;
+    target.style.transform = `translateY(${y}px)`;
   };
 
   /**
@@ -94,11 +85,23 @@ module.exports = (mediaQuery, threshold = -300) => {
    * @param {Event} evt
    */
   const pan = evt => {
-    currentPosition = 0;
+    evt.preventDefault();
     const target = evt.currentTarget || evt.srcElement;
     const deltaY = +target.style.transform.match(/[-]?\d+/)[0];
-    target.classList.remove('collapsed');
-    changeSections(threshold > deltaY);
+    const idx = target.getAttribute('data-index');
+    const clickExpand = deltaY === initialPosition && !deltaY && !initialPosition;
+    const shouldExpand = initialPosition - threshold > deltaY || clickExpand;
+    if (shouldExpand) {
+      draggable.slice(0, idx).forEach(expand);
+    } else {
+      draggable.slice(idx - 1).forEach(collapse);
+    }
+  };
+
+  const setInitialPosition = evt => {
+    evt.preventDefault();
+    const target = evt.currentTarget || evt.srcElement;
+    initialPosition = +target.style.transform.match(/[-]?\d+/)[0];
   };
 
   draggable.forEach((section, i) => {
@@ -111,6 +114,8 @@ module.exports = (mediaQuery, threshold = -300) => {
       },
       { passive: false }
     );
+    section.addEventListener('mousedown', setInitialPosition);
+    section.addEventListener('touchstart', setInitialPosition);
     section.addEventListener('mouseup', pan);
     section.addEventListener('touchend', pan);
 
@@ -118,12 +123,9 @@ module.exports = (mediaQuery, threshold = -300) => {
       const section = draggable[i];
       const isExpanded = section.classList.contains('expanded');
       if (isExpanded) {
-        if (!section.classList.contains('dragging')) {
-          currentPosition = +section.style.transform.match(/[-]?\d+/)[0];
-        }
-        draggable.slice(i).forEach(section => !section.classList.contains('collapsed') && drag(section, currentPosition + deltaY));
+        dragSections(draggable.slice(i), 'collapsed', initialPosition + deltaY);
       } else {
-        draggable.slice(0, i + 1).forEach(section => !section.classList.contains('expanded') && drag(section, deltaY));
+        dragSections(draggable.slice(0, i + 1), 'expanded', deltaY);
       }
     });
   });
