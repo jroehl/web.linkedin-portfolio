@@ -208,8 +208,8 @@ mixin router(key)
       +renderSkills(partial)
 
 mixin renderSection(section, i)
-  - const max = meta.sections.length;
-  - const revIdx = max - i;
+  - const sectionLength = meta.sections.length;
+  - const revIdx = sectionLength - i;
   section(
     class=['draggable', 'collapsed']
     data-index=i
@@ -223,6 +223,7 @@ mixin renderSection(section, i)
     div.container
       if section.header
         h2=section.header
-      each key in section.keys
-        +router(key)
-      block
+      div.articles
+        each key in section.keys
+          +router(key)
+        block

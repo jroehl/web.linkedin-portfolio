@@ -74,6 +74,10 @@ i {
   width: auto;
 }
 
+section.draggable div.container {
+  height: calc(100% - 1rem);
+}
+
 section.background {
   color: white;
   height: 100%;
@@ -84,7 +88,7 @@ section.background h2 {
 }
 
 section.background h3 {
-  padding-top: .5rem;
+  padding-top: 0.5rem;
 }
 
 section.background div.container {
@@ -160,6 +164,11 @@ section.draggable.transition {
 
 section.draggable article + article {
   padding-top: 2rem;
+}
+
+div.articles {
+  height: 100%;
+  overflow-y: scroll;
 }
 
 .timeline .timeline-item .timeline-icon.icon-lg {

@@ -15,12 +15,19 @@ No media query since this is the default in Bootstrap because it is "mobile firs
   .container {
     margin: 1.2rem 3rem;
   }
+
+  section.draggable div.container {
+    height: calc(100% - 2.4rem);
+  }
 }
 
 /* Large devices (desktops, 992px and up) */
 @media (min-width: 992px) {
   .container {
     margin: 2rem 3rem;
+  }
+  section.draggable div.container {
+    height: calc(100% - 4rem);
   }
   section.background div.container > div.animated-load {
     flex-direction: column;
@@ -86,7 +93,7 @@ No media query since this is the default in Bootstrap because it is "mobile firs
   }
   section.draggable .container {
     margin: 0.8rem 1.5rem;
-    height: 100%;
+    height: calc(100% - 1.6rem);
   }
   section.draggable article {
     overflow-y: scroll;

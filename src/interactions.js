@@ -1,5 +1,7 @@
 import Hammer from 'hammerjs';
 
+const timeouts = [];
+
 /**
  * Collapse elements by panning to original position
  * @param {HTMLElement} target
@@ -37,6 +39,9 @@ const dragSections = (sections, className, deltaY) =>
  * @param {number} deltaY
  */
 const drag = (section, deltaY) => {
+  timeouts.forEach(clearTimeout);
+  section.style.bottom = '-300%';
+  section.style.height = 'unset';
   section.style.transitionDelay = 'unset';
   section.classList.remove('transition');
   section.classList.add('dragging');
@@ -52,6 +57,7 @@ module.exports = (mediaQuery, threshold = 100) => {
   const sections = Array.from(document.getElementsByTagName('section'));
   const [background, ...draggable] = sections;
   let initialPosition = 0;
+  const expandedY = (window.innerHeight * (draggable.length + 1)) / -10;
 
   if (!background) throw new Error('No <section> tags in dom');
 
@@ -76,8 +82,14 @@ module.exports = (mediaQuery, threshold = 100) => {
   const expand = target => {
     target.classList.add('transition', 'expanded');
     target.classList.remove('dragging', 'collapsed');
-    const y = (window.innerHeight * (draggable.length + 1)) / -10;
-    target.style.transform = `translateY(${y}px)`;
+    const idx = target.getAttribute('data-index');
+    target.style.transform = `translateY(${expandedY}px)`;
+    timeouts.push(
+      setTimeout(() => {
+        target.style.height = `${90 - 5 * idx}%`;
+        target.style.bottom = '0';
+      }, 1000)
+    );
   };
 
   /**
@@ -91,10 +103,13 @@ module.exports = (mediaQuery, threshold = 100) => {
     const idx = target.getAttribute('data-index');
     const clickExpand = deltaY === initialPosition && !deltaY && !initialPosition;
     const shouldExpand = initialPosition - threshold > deltaY || clickExpand;
-    if (shouldExpand) {
-      draggable.slice(0, idx).forEach(expand);
-    } else {
+    if (!shouldExpand) {
       draggable.slice(idx - 1).forEach(collapse);
+    } else {
+      const sections = [...draggable];
+      const stacked = sections.splice(0, idx);
+      const dragging = sections.filter(({ classList }) => classList.contains('dragging'));
+      [...stacked, ...dragging].forEach(expand);
     }
   };
 
