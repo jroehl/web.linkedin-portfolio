@@ -51,6 +51,10 @@ html(class="no-js", lang="en")
             span
               +router('EMAIL_ADDRESSES')
               +router('PROFILE')
+            if config.hasSetupPage
+              br
+              p
+                a(href='/setup')='If you want your own LinkedIn profile page visit /setup'
       span.sections
         each section, i in meta.sections.reverse()
           +renderSection(section, i + 1)

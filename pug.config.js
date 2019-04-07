@@ -1,6 +1,6 @@
 const data = require('./tmp/data.json');
 const { validKeys, sectionsWorksheet } = require('./backend/config');
-const { normalizeKey } = require('./backend/utils');
+const { normalizeKey, hasGapiCreds } = require('./backend/utils');
 
 require('dotenv').config();
 
@@ -8,6 +8,7 @@ module.exports = {
   locals: {
     ...data,
     config: {
+      hasSetupPage: hasGapiCreds(),
       icons: {
         // custom
         linkedin: 'fab fa-linkedin-in',

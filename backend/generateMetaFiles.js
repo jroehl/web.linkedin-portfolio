@@ -1,9 +1,10 @@
 const { writeFileSync, existsSync, mkdirSync } = require('fs');
 const { resolve } = require('path');
+const { hasGapiCreds } = require('./utils');
 
 require('dotenv').config();
 
-const { URL: domain, BUILD_ENV, GAPI_API_KEY, GAPI_CLIENT_ID } = process.env;
+const { URL: domain, BUILD_ENV } = process.env;
 
 process.stdout.write('Generating "robots.txt"');
 
@@ -25,7 +26,7 @@ const lastMod = new Date().toJSON().slice(0, 10);
 const separator = domain.slice(-1) === '/' ? '' : '/';
 
 let setup = '';
-if (GAPI_API_KEY && GAPI_CLIENT_ID) {
+if (hasGapiCreds()) {
   setup = `\
   <url>
     <loc>${`${domain}${separator}setup`}</loc>

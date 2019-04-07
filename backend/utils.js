@@ -44,8 +44,15 @@ const extractMappingKeys = (validKeys, prefix = 'SHEET_MAPPING_') => {
   );
 };
 
+/**
+ * Check if google apiKey and clientID exist
+ * @returns {boolean}
+ */
+const hasGapiCreds = () => !!(process.env.GAPI_API_KEY && process.env.GAPI_CLIENT_ID);
+
 module.exports = {
   extractMappingKeys,
   normalizeKey,
   getRandomColor,
+  hasGapiCreds,
 };
