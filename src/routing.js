@@ -126,7 +126,10 @@ const signOut = () => {
 export const setError = err => {
   form.classList.remove('is-success', 'is-processing');
   form.classList.add('is-error');
-  status.innerHTML = `<p>Following error occured:</p><strong>${err.message || err}</strong><p>Please restart</p>`;
+  console.error(err);
+  status.innerHTML = `<p>Following error occured:</p><strong>${
+    err.message || typeof err === 'string' ? err : JSON.stringify(err)
+  }</strong><p>Please restart</p>`;
   icon.className = 'fas fa-bomb';
   form.onclick = restart;
 };
