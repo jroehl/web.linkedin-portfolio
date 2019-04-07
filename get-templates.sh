@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
-. ./.env
+if [ -f ./.env ]; then
+  . ./.env
+fi
 
 TEMPLATES="templates/index.pug templates/404.pug"
 if [[ ! -z "$GAPI_API_KEY" && ! -z "$GAPI_CLIENT_ID" ]]; then
