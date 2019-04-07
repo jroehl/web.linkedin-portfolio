@@ -7,7 +7,7 @@ const gravatar = require('gravatar');
 
 require('dotenv').config();
 
-const config = require('../config');
+const config = require('./config');
 const { extractMappingKeys } = require('./utils');
 
 /**
@@ -71,9 +71,13 @@ const fetchData = async () => {
 
   const { SECTIONS, ...data } = res.reduce((red, d) => ({ ...red, [d.mapped]: d }), {});
 
+  const defaults = config.sectionsWorksheet.slice(1).map((row, i) => {
+    return row.reduce((red, cell) => ({ ...red, [config.sectionsWorksheet[i]]: cell }), {});
+  });
+
   if (!SECTIONS) {
     console.info('No Sections worksheet found, falling back to default sections');
-    SECTIONS = { values: config.defaults.sections };
+    SECTIONS = { values: defaults };
   }
 
   const validKeys = config.validKeys.filter(key => data[key]);

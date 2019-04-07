@@ -1,0 +1,111 @@
+@import './base.css';
+
+a {
+  font-weight: bold;
+  cursor: pointer;
+}
+
+a, a:hover {
+  text-decoration: none;
+}
+
+i {
+  cursor: pointer;
+}
+
+i.fa-info-circle {
+  font-size: 3rem;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  padding: 2rem;
+}
+
+.box {
+  font-size: 1.25rem;
+  background-color: #c8dadf;
+  position: relative;
+  height: 100%;
+  cursor: pointer;
+}
+
+.box > div {
+  max-width: 80%;
+  text-align: center;
+}
+
+h1 {
+  position: absolute;
+  top: 3rem;
+  text-align: center;
+}
+
+.box,
+.box__input,
+.box__status {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.box__input {
+  width: 100%;
+  display: none;
+}
+
+.box .box__status:hover strong,
+.box .box__status:hover a {
+  color: #39bfd3 !important;
+}
+
+.box.has-advanced-upload {
+  outline: 2px dashed #92b0b3;
+  outline-offset: -10px;
+  transition: outline-offset 0.15s ease-in-out, background-color 0.15s linear;
+}
+
+.box.is-dragover {
+  outline-offset: -20px;
+  outline-color: #c8dadf;
+  background-color: #fff;
+}
+
+.box.is-authorized .box__input {
+  display: flex;
+}
+
+.fa-2x {
+  padding: 1rem;
+}
+
+.box .box__status {
+  white-space: pre-wrap;
+}
+
+.box__file {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+}
+
+.no-js .box__button {
+  display: block;
+}
+
+.box__button {
+  font-weight: 700;
+  color: #e5edf1;
+  background-color: #39bfd3;
+  display: none;
+  padding: 8px 16px;
+  margin: 40px auto 0;
+}
+
+.box__button:hover,
+.box__button:focus {
+  background-color: #0f3c4b;
+}

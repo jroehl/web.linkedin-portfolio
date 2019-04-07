@@ -54,7 +54,7 @@ const drag = (section, deltaY) => {
  * @param {number} [threshold=100]
  */
 module.exports = (mediaQuery, threshold = 100) => {
-  const sections = Array.from(document.getElementsByTagName('section'));
+  const sections = Array.from(document.querySelectorAll('section'));
   const [background, ...draggable] = sections;
   let initialPosition = 0;
   const expandedY = (window.innerHeight * (draggable.length + 1)) / -10;

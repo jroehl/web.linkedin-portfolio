@@ -1,0 +1,70 @@
+@import url('https://fonts.googleapis.com/css?family=Space+Mono');
+
+@import '../node_modules/spectre.css/dist/spectre.min.css';
+@import '../node_modules/spectre.css/dist/spectre-exp.min.css';
+
+html {
+  --bg-color: black;
+  --transition-timing: cubic-bezier(0.42, 0, 0.6, 1.05);
+}
+
+html,
+body,
+main {
+  height: 100%;
+  overflow: hidden;
+  color: white;
+  font-size: 0.9rem;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Space Mono', monospace;
+}
+
+h1 {
+  font-size: 1.7rem;
+  margin-bottom: 0.3rem;
+}
+h2 {
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 1.1rem;
+  margin-bottom: 1.4rem;
+}
+
+h3 {
+  font-size: 1.2rem;
+}
+h4 {
+  font-size: 1rem;
+}
+
+a {
+  color: white !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.modal * {
+  color: black !important;
+}
+
+p {
+  margin-bottom: 0.2rem;
+}
+
+body {
+  background-color: var(--bg-color);
+}
+
+main {
+  height: 100%;
+  width: 100%;
+  position: relative;
+}

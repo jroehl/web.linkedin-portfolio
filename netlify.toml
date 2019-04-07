@@ -28,9 +28,3 @@
 #####################################
 ############# REDIRECTS #############
 #####################################
-
-# Redirect all paths (except the base domain) to 404 page
-[[redirects]]
-  from = "/*"
-  to = "/404.html"
-  status = 404

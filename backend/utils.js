@@ -1,5 +1,3 @@
-const { identity, pickBy, defaultsDeep } = require('lodash');
-
 /**
  * Generate random color as HEX string
  * @returns {string}
@@ -47,8 +45,7 @@ const extractMappingKeys = (validKeys, prefix = 'SHEET_MAPPING_') => {
 };
 
 module.exports = {
-  getRandomColor,
-  toCamelCase,
-  normalizeKey,
   extractMappingKeys,
+  normalizeKey,
+  getRandomColor,
 };

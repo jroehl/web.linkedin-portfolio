@@ -3,7 +3,7 @@ import initInteractions from './interactions.js';
 /**
  * Remove class if javascript is available
  */
-document.getElementsByTagName('html')[0].classList.remove('no-js');
+document.documentElement.classList.remove('no-js');
 
 const mediaQueries = [
   { key: 'mobileLandscape', query: '(min-width: 481px) and (max-width: 1024px) and (orientation: landscape)' },
