@@ -4,11 +4,14 @@ const { normalizeKey, hasGapiCreds } = require('./backend/utils');
 
 require('dotenv').config();
 
+const hasSetupPage = hasGapiCreds();
+
+console.log(`Building website ${hasSetupPage ? 'with' : 'without'} "/setup" subpage`);
+
 module.exports = {
   locals: {
     ...data,
     config: {
-      hasSetupPage: hasGapiCreds(),
       icons: {
         // custom
         linkedin: 'fab fa-linkedin-in',
