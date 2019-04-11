@@ -58,7 +58,9 @@ module.exports = (mediaQuery, threshold = 100) => {
   let initialPosition = 0;
   const expandedY = (window.innerHeight * (draggable.length + 1)) / -10;
 
-  document.body.addEventListener('click', () => reset(draggable));
+  document.querySelector('section.background').addEventListener('click', () => {
+    reset(draggable);
+  });
 
   if (mediaQuery === 'xl') {
     draggable.forEach(el =>
