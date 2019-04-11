@@ -1,7 +1,5 @@
 import initInteractions from './interactions.js';
-
-const { palettes } = window;
-/**
+/*
  * Remove class if javascript is available
  */
 document.documentElement.classList.remove('no-js');
@@ -17,6 +15,7 @@ const mediaQueries = [
 let currentIdx = 1;
 const main = document.querySelector('main');
 const invertBtn = document.querySelector('i.fas.fa-palette.invert');
+const palettes = ['color', 'inverted', 'greyscale', 'inverted-greyscale'];
 invertBtn.onclick = () => {
   const currentClass = palettes[currentIdx++ % palettes.length];
   main.classList = currentClass === 'color' ? '' : currentClass;
