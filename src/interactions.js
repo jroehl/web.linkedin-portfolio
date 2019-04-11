@@ -13,7 +13,7 @@ const collapse = target => {
 };
 
 /**
- * Collapse all sections
+ * Collapse all stacks
  * @param {array<HTMLElement>} elements
  */
 const reset = elements =>
@@ -24,12 +24,12 @@ const reset = elements =>
 
 /**
  * Drag section array
- * @param {array<HTMLElement>} sections
+ * @param {array<HTMLElement>} stacks
  * @param {string} className
  * @param {number} deltaY
  */
-const dragSections = (sections, className, deltaY) =>
-  sections.forEach(section => {
+const dragStacks = (stacks, className, deltaY) =>
+  stacks.forEach(section => {
     if (!section.classList.contains(className)) drag(section, deltaY);
   });
 
@@ -54,12 +54,9 @@ const drag = (section, deltaY) => {
  * @param {number} [threshold=100]
  */
 module.exports = (mediaQuery, threshold = 100) => {
-  const sections = Array.from(document.getElementsByTagName('section'));
-  const [background, ...draggable] = sections;
+  const draggable = Array.from(document.querySelectorAll('section.stack'));
   let initialPosition = 0;
   const expandedY = (window.innerHeight * (draggable.length + 1)) / -10;
-
-  if (!background) throw new Error('No <section> tags in dom');
 
   document.body.addEventListener('click', () => reset(draggable));
 
@@ -98,7 +95,8 @@ module.exports = (mediaQuery, threshold = 100) => {
    */
   const pan = evt => {
     evt.preventDefault();
-    const target = evt.currentTarget || evt.srcElement;
+    const target = (evt.currentTarget || evt.srcElement).parentElement.parentElement;
+    if (evt.target.tagName.toLowerCase() === 'a') evt.target.click();
     const deltaY = +target.style.transform.match(/[-]?\d+/)[0];
     const idx = target.getAttribute('data-index');
     const clickExpand = deltaY === initialPosition && !deltaY && !initialPosition;
@@ -106,41 +104,35 @@ module.exports = (mediaQuery, threshold = 100) => {
     if (!shouldExpand) {
       draggable.slice(idx - 1).forEach(collapse);
     } else {
-      const sections = [...draggable];
-      const stacked = sections.splice(0, idx);
-      const dragging = sections.filter(({ classList }) => classList.contains('dragging'));
+      const stacks = [...draggable];
+      const stacked = stacks.splice(0, idx);
+      const dragging = stacks.filter(({ classList }) => classList.contains('dragging'));
       [...stacked, ...dragging].forEach(expand);
     }
   };
 
   const setInitialPosition = evt => {
     evt.preventDefault();
-    const target = evt.currentTarget || evt.srcElement;
+    const target = (evt.currentTarget || evt.srcElement).parentElement.parentElement;
     initialPosition = +target.style.transform.match(/[-]?\d+/)[0];
   };
 
   draggable.forEach((section, i) => {
-    const hammer = new Hammer(section);
-    section.addEventListener(
-      'touchmove',
-      e => {
-        e.preventDefault();
-        e.stopPropagation();
-      },
-      { passive: false }
-    );
-    section.addEventListener('mousedown', setInitialPosition);
-    section.addEventListener('touchstart', setInitialPosition);
-    section.addEventListener('mouseup', pan);
-    section.addEventListener('touchend', pan);
+    const dragHandler = section.querySelector('h2');
+    const hammer = new Hammer(dragHandler);
+
+    dragHandler.addEventListener('mousedown', setInitialPosition);
+    dragHandler.addEventListener('touchstart', setInitialPosition);
+    dragHandler.addEventListener('mouseup', pan);
+    dragHandler.addEventListener('touchend', pan);
 
     hammer.on('panup pandown', ({ deltaY }) => {
       const section = draggable[i];
       const isExpanded = section.classList.contains('expanded');
       if (isExpanded) {
-        dragSections(draggable.slice(i), 'collapsed', initialPosition + deltaY);
+        dragStacks(draggable.slice(i), 'collapsed', initialPosition + deltaY);
       } else {
-        dragSections(draggable.slice(0, i + 1), 'expanded', deltaY);
+        dragStacks(draggable.slice(0, i + 1), 'expanded', deltaY);
       }
     });
   });

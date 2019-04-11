@@ -1,4 +1,20 @@
-include ./mixins.pug
+include ./functions.pug
+
+mixin renderHeader({ PROFILE, EMAIL_ADDRESSES })
+  -
+    const { values: [profile] } = PROFILE;
+    const { values: [email] } = EMAIL_ADDRESSES;
+    const name = getName(profile);
+  header.animated-load
+    div
+      h1=name
+      h2=profile.headline
+    figure.avatar.avatar-xl
+      img(src=email.gravatar)
+
+mixin renderSummary({ values })
+  - const [profile] = values;
+  blockquote=profile.summary
 
 mixin renderProfile({ values, title, header })
   article
@@ -74,7 +90,7 @@ mixin renderLanguages({ values, title, header })
     each lang in values
       li
         span=lang.name
-        small.tile-subtitle.text-gray=` (${lang.proficiency})`
+        small.tile-subtitle.variant=` (${lang.proficiency})`
 
 mixin renderProjects({ values, title, header })
   article
@@ -96,12 +112,13 @@ mixin renderProjects({ values, title, header })
               div.tile-content
                 h4.tile-title=project.title
                 p.tile-subtitle.description=project.description.replace('  ', '\n\n')
-                small.tile-subtitle.text-gray
+                small.tile-subtitle.variant
                   =`${fromTo(project.startedon, project.finishedon)}`
-                  a(
-                    class="text-gray"
-                    href=project.url, target='_blank'
-                  )=project.url ? ` · more` : ''
+                  if project.url
+                    =' · '
+                    a.variant(
+                      href=project.url, target='_blank'
+                    ) more
 
 mixin renderEducation({ values, title, header })
   article
@@ -125,7 +142,7 @@ mixin renderEducation({ values, title, header })
                 h4.tile-title=edu.schoolname
                 p.tile-subtitle.description=edu.degreename
                 p.tile-subtitle.description=edu.notes.replace('  ', '\n\n')
-                small.tile-subtitle.text-gray
+                small.tile-subtitle.variant
                   span=fromTo(edu.startdate, edu.enddate, true)
 
 mixin renderCertifications({ values, title, header })
@@ -149,12 +166,13 @@ mixin renderCertifications({ values, title, header })
               div.tile-content
                 h4.tile-title=cert.name
                 p.tile-subtitle.description=`${cert.authority}${cert.url ? ` (${cert.licensenumber})` : ''}`
-                small.tile-subtitle.text-gray
+                small.tile-subtitle.variant
                   =fromTo(cert.startedon, cert.finishedon)
-                  a(
-                    class="text-gray"
-                    href=cert.url, target='_blank'
-                  )=cert.url ? ` · more` : ''
+                  if cert.url
+                    =' · '
+                    a.variant(
+                      href=cert.url, target='_blank'
+                    ) more
 
 mixin renderPositions({ values, title, header })
   article
@@ -178,7 +196,7 @@ mixin renderPositions({ values, title, header })
                 h4.tile-title=position.companyname
                 p.tile-subtitle.description=position.title
                 p.tile-subtitle.description=position.description.replace('  ', '\n\n')
-                small.tile-subtitle.text-gray
+                small.tile-subtitle.variant
                   span=`${fromTo(position.startedon, position.finishedon, true)} `
                   span=position.location ? `· ${position.location}` : ''
 
@@ -190,6 +208,10 @@ mixin renderSkills({ values, title, header })
 mixin router(key)
   - const partial = data[key]
   case key
+    when 'HEADER'
+      +renderHeader(data)
+    when 'SUMMARY'
+      +renderSummary(data.PROFILE)
     when 'PROFILE'
       +renderProfile(partial)
     when 'EMAIL_ADDRESSES'
@@ -207,22 +229,24 @@ mixin router(key)
     when 'SKILLS'
       +renderSkills(partial)
 
-mixin renderSection(section, i)
-  - const sectionLength = meta.sections.length;
-  - const revIdx = sectionLength - i;
+mixin renderStack(section, i, sections)
+  -
+    const sectionLength = sections.length;
+    const revIdx = sectionLength - i;
   section(
-    class=['draggable', 'collapsed']
+    id=`stack-${i}`,
+    class=['stack', 'draggable', 'collapsed']
     data-index=i
     style={
-      'background-color': section.color,
       top: `${95 - 5 * revIdx}%`,
       width: `${97.5 - 3 * i}%`,
       'transition-delay': `${200 + 25 * revIdx}ms`
     }
   )
-    div.container
-      if section.header
-        h2=section.header
+    div.container(style={
+      height: `calc(${100 - 5 * revIdx}% - 1rem)`
+    })
+      h2=section.header
       div.articles
         each key in section.keys
           +router(key)

@@ -4,11 +4,11 @@ const { resolve } = require('path');
 const GoogleSpreadsheet = require('google-spreadsheet');
 const { pick } = require('lodash');
 const gravatar = require('gravatar');
+const generateInlineStyles = require('./generateInlineStyles');
 
 require('dotenv').config();
 
 const config = require('../config');
-const { extractMappingKeys } = require('./utils');
 
 /**
  * Fetch the first row and return as header (with normalized titles)
@@ -51,42 +51,36 @@ const fetchData = async () => {
   const getInfo = promisify(doc.getInfo);
 
   const { title, author, worksheets } = await getInfo();
-  const mappingKeys = extractMappingKeys(config.validKeys);
 
   console.log(`\nQuerying "${title}" (${spreadsheetId}) by "${author.email}"`);
 
+  const allWorksheets = worksheets.length;
   const res = await Promise.all(
-    worksheets.map(async sheet => {
+    worksheets.map(async (sheet, i) => {
       const { title } = sheet;
-      const mapped = mappingKeys[title];
-      if (!mapped)
-        throw new Error(`Worksheet "${title}" mapping error - check environment variables\nCurrent Mappings\n${JSON.stringify(mappingKeys, null, 2)}`);
+      const normalized = title.replace(/ /g, '_').toUpperCase();
+      const part = `${(i + 1).toString().padStart(allWorksheets.toString().length, '0')}/${allWorksheets}`;
 
-      console.log(`Fetching data for ${title} [${mapped}]`);
+      if (!config.validKeys.includes(normalized)) {
+        console.info(`${part} | Worksheet title "${title}" [${normalized}] is not valid - skipping`);
+        return null;
+      }
+      console.log(`${part} | Fetching data for "${title}" [${normalized}]`);
       const header = await getHeaderRow(sheet);
       const values = await getValues(sheet, Object.keys(header));
-      return { title, mapped, header, values };
+      return { title, normalized, header, values };
     })
   );
 
-  const { SECTIONS, ...data } = res.reduce((red, d) => ({ ...red, [d.mapped]: d }), {});
+  const { SECTIONS, ...data } = res.reduce((red, d) => (d ? { ...red, [d.normalized]: d } : red), {});
 
-  if (!SECTIONS) {
-    console.info('No Sections worksheet found, falling back to default sections');
-    SECTIONS = { values: config.defaults.sections };
-  }
+  if (!SECTIONS) throw new Error('No "Sections" worksheet found, please follow setup steps.');
 
-  const validKeys = config.validKeys.filter(key => data[key]);
+  const foundSheets = config.validKeys.filter(key => data[key]);
   const sections = SECTIONS.values.map(({ keys, ...rest }) => {
     return {
       ...rest,
-      keys: Array.isArray(keys)
-        ? keys
-        : keys.split(',').map(s => {
-            const cleaned = s.trim();
-            if (!validKeys.includes(cleaned)) throw new Error(`Key "${cleaned}" for "${rest.header}" section is invalid`);
-            return cleaned;
-          }),
+      keys: Array.isArray(keys) ? keys : keys.split(',').map(s => s.trim()),
     };
   });
 
@@ -105,15 +99,33 @@ const fetchData = async () => {
     }, []),
   };
 
+  const { stacks, background } = sections.reduce(
+    (red, section) => {
+      if (section.header === '$BACKGROUND') {
+        return { ...red, background: section };
+      }
+      return { ...red, stacks: [...red.stacks, section] };
+    },
+    { background: null, stacks: [] }
+  );
+
+  if (!background) throw new Error('No "$BACKGROUND" section specified, please follow setup steps.');
+
+  const meta = {
+    background,
+    stacks: stacks.reverse(),
+    keys: foundSheets,
+    spreadsheetId,
+  };
+
   return {
     data: {
       ...data,
       EMAIL_ADDRESSES: emailAddresses,
     },
     meta: {
-      sections,
-      keys: validKeys,
-      spreadsheetId,
+      ...meta,
+      inlineStyles: generateInlineStyles(meta),
     },
   };
 };
@@ -130,4 +142,5 @@ fetchData()
     console.error('\nError while fetching data from spreadsheet');
     console.log(err.message);
     console.log('');
+    process.exit(1);
   });

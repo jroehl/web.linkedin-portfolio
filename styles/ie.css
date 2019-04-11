@@ -11,10 +11,12 @@
   z-index: 10;
   background-color: rgba(244, 67, 54, 0.86);
 }
+
 .browser h1 {
   font-size: 80px !important;
   font-size: 5vw !important;
 }
+
 .browser a {
   text-decoration: none;
 }

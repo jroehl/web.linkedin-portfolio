@@ -41,6 +41,7 @@
     "postcss-modules": "^1.4.1",
     "pug": "^2.0.3",
     "rimraf": "^2.6.3",
-    "spectre.css": "^0.5.8"
+    "spectre.css": "^0.5.8",
+    "tinycolor2": "^1.4.1"
   }
 }

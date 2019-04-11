@@ -4,7 +4,6 @@
 @import '../node_modules/spectre.css/dist/spectre-exp.min.css';
 
 html {
-  --bg-color: black;
   --transition-timing: cubic-bezier(0.42, 0, 0.6, 1.05);
 }
 
@@ -12,12 +11,25 @@ html,
 body,
 main {
   height: 100%;
-  overflow: hidden;
-  color: white;
-  font-size: 0.9rem;
+  width: 100%;
 }
 
-h1,
+main {
+  position: relative;
+  font-size: 0.9rem;
+  overflow: hidden;
+}
+
+main,
+main section,
+main section a:visited,
+.chip {
+  transition-property: background-color;
+  transition-timing-function: var(--transition-timing);
+  transition-duration: 1s;
+}
+
+main * h1,
 h2,
 h3,
 h4,
@@ -33,53 +45,54 @@ h1 {
 h2 {
   text-transform: uppercase;
   font-weight: bold;
-  font-size: 1.1rem;
+  font-size: 1rem;
   margin-bottom: 1.4rem;
 }
 
 h3 {
   font-size: 1.2rem;
 }
+
 h4 {
   font-size: 1rem;
 }
 
 a {
-  color: white !important;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  z-index: 10;
 }
 
 p {
   margin-bottom: 0.2rem;
 }
 
-body {
-  background-color: var(--bg-color);
-}
-
-main {
-  height: 100%;
-  width: 100%;
-  position: relative;
-}
-
 i {
   width: 1rem !important;
 }
 
+article.warn {
+  position: fixed;
+  z-index: 10;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(244, 67, 54, 0.86);
+}
+
+article.warn h4 {
+  text-align: center;
+  margin: 1rem;
+  color: white;
+}
+
 .container {
-  margin: 0.5rem 1.5rem;
+  padding: 0.5rem 1rem 0 1rem;
   width: auto;
 }
 
-section.draggable div.container {
-  height: calc(100% - 1rem);
-}
-
 section.background {
-  color: white;
   height: 100%;
 }
 
@@ -92,14 +105,6 @@ section.background h3 {
 }
 
 section.background div.container {
-  display: flex;
-  flex-direction: column;
-  margin-top: 1.6rem;
-  margin-bottom: 1.6rem;
-  justify-content: space-between;
-}
-
-section.background div.container > div.animated-load {
   display: flex;
   flex-direction: column;
   overflow-y: scroll;
@@ -120,18 +125,33 @@ section.background header {
 section.background blockquote {
   margin-bottom: 1.5rem;
   line-height: 1rem;
+  margin-block-end: 0;
+  margin-inline-end: 0;
 }
 
-.animated-load:nth-child(1) {
-  animation: 500ms var(--transition-timing) 1200ms appear forwards;
+section.background div.container > div.animated-load,
+i.invert {
   opacity: 0;
   transform: translateY(-25%);
+  animation-duration: 500ms;
+  animation-fill-mode: forwards;
+  animation-name: appear;
+  animation-timing-function: var(--transition-timing);
+  animation-delay: 2000ms;
 }
 
-.animated-load:nth-child(2) {
-  animation: 1000ms var(--transition-timing) 1700ms appear forwards;
-  opacity: 0;
-  transform: translateY(0);
+section.background div.container > div.animated-load {
+  display: flex;
+  flex-direction: column;
+}
+
+i.invert {
+  position: absolute;
+  right: 1.5rem;
+  bottom: 1rem;
+  font-size: 1.5rem;
+  z-index: 1;
+  cursor: pointer;
 }
 
 @keyframes appear {
@@ -143,17 +163,21 @@ section.background blockquote {
 
 section.draggable {
   position: absolute;
-  border-top-right-radius: 5rem;
+  border-top-right-radius: 64px;
   bottom: -300%;
   transform: translateY(100%);
-  animation: 500ms var(--transition-timing) 1500ms sections-appear forwards;
+  animation: 500ms var(--transition-timing) 1500ms stacks-appear forwards;
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
 }
 
-@keyframes sections-appear {
+@keyframes stacks-appear {
   to {
     transform: translateY(0);
   }
+}
+
+section.draggable div.container {
+  height: 100%;
 }
 
 section.draggable.transition {
@@ -163,17 +187,18 @@ section.draggable.transition {
 }
 
 section.draggable article + article {
-  padding-top: 2rem;
+  padding-top: 1rem;
 }
 
 div.articles {
-  height: 100%;
+  height: calc(100% - 3rem);
   overflow-y: scroll;
 }
 
 .timeline .timeline-item .timeline-icon.icon-lg {
   background: transparent;
-  border: 0.11rem solid white;
+  border-width: 0.11rem;
+  border-style: solid;
   border-radius: 50%;
   margin-top: 0.2rem;
   height: 0.8rem;
@@ -186,14 +211,6 @@ div.articles {
   width: 1px;
 }
 
-.timeline .timeline-item .timeline-icon {
-  color: white;
-}
-
-.timeline .timeline-item .timeline-icon::before {
-  border-color: white;
-}
-
 p.tile-subtitle.description {
   padding-top: 0.1rem;
 }
@@ -203,7 +220,6 @@ h4.tile-title {
 }
 
 .chip {
-  color: #3b4351;
   height: 1.4rem;
   max-width: unset;
 }

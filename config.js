@@ -1,30 +1,6 @@
-const { getRandomColor } = require('./bin/utils.js');
-
-const sections = [
-  {
-    header: 'about me',
-    keys: ['PROFILE', 'EMAIL_ADDRESSES', 'LANGUAGES'],
-    color: getRandomColor(),
-  },
-  {
-    header: 'projects',
-    keys: ['PROJECTS'],
-    color: getRandomColor(),
-  },
-  {
-    header: 'skills & education',
-    keys: ['SKILLS', 'EDUCATION', 'CERTIFICATIONS'],
-    color: getRandomColor(),
-  },
-  {
-    header: 'work',
-    keys: ['POSITIONS'],
-    color: getRandomColor(),
-  },
-];
-
 module.exports = {
-  validKeys: ['SECTIONS', 'PROFILE', 'LANGUAGES', 'PROJECTS', 'EDUCATION', 'CERTIFICATIONS', 'POSITIONS', 'SKILLS', 'EMAIL_ADDRESSES'],
+  validKeys: ['SECTIONS', 'HEADER', 'SUMMARY', 'PROFILE', 'LANGUAGES', 'PROJECTS', 'EDUCATION', 'CERTIFICATIONS', 'POSITIONS', 'SKILLS', 'EMAIL_ADDRESSES'],
+  palettes: ['color', 'inverted', 'greyscale', 'inverted-greyscale'],
   icons: {
     // custom
     linkedin: 'fab fa-linkedin-in',
@@ -49,8 +25,5 @@ module.exports = {
     industry: 'fas fa-industry',
     other: 'fas fa-globe',
     fallback: 'fas fa-globe',
-  },
-  defaults: {
-    sections,
   },
 };

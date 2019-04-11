@@ -1,3 +1,4 @@
+include ./styling.pug
 include ./sections.pug
 include ./ie.pug
 
@@ -30,29 +31,20 @@ html(class="no-js", lang="en")
       integrity='sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr',
       crossorigin='anonymous'
     )
+    style !{meta.inlineStyles}
   body
     +ieElements()
     main
+      article.warn(style={ display: 'none' })
+        h4 This website is optimized for mobile devices
       section.background
-        div.container(
-            style={
-              height: `calc(${100 - meta.sections.length * 5}% - 3.2rem)`,
-            }
-          )
-          header.animated-load
-            div
-              h1=name
-              h2=profile.headline
-            figure.avatar.avatar-xl
-              img(src=email.gravatar)
-          div.animated-load
-            span
-              blockquote=profile.summary
-            span
-              +router('EMAIL_ADDRESSES')
-              +router('PROFILE')
-      span.sections
-        each section, i in meta.sections.reverse()
-          +renderSection(section, i + 1)
-
+        i.fas.fa-palette.invert
+        div.container(style={ height: `${100 - (meta.stacks.length) * 5}%` })
+          each key in meta.background.keys
+            div.animated-load
+              +router(key)
+      span.stacks
+        each section, i in meta.stacks
+          +renderStack(section, i + 1, meta.stacks)
+    script const palettes = !{JSON.stringify(config.palettes)}
     script(src='../src/index.js')
