@@ -143,6 +143,7 @@ i.invert {
 section.background div.container > div.animated-load {
   display: flex;
   flex-direction: column;
+  flex-shrink: 0;
 }
 
 i.invert {

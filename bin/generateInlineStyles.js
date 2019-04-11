@@ -117,7 +117,7 @@ module.exports = meta => {
             [dynStackSelector]: {
               'background-color': backgroundColor,
             },
-            [`${dynStackSelector}, ${dynStackSelector} i`]: {
+            [`${dynStackSelector}, ${dynStackSelector} a, ${dynStackSelector} i`]: {
               color: varColor,
             },
             [`${dynStackSelector} a:visited, ${dynStackSelector} a.variant:visited`]: {
