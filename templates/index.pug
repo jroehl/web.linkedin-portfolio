@@ -33,13 +33,14 @@ html(class="no-js", lang="en")
     )
     style !{meta.inlineStyles}
   body
+
     +ieElements()
     main
       article.warn(style={ display: 'none' })
         h4 This website is optimized for mobile devices
       section.background
         i.fas.fa-palette.invert
-        div.container(style={ height: `${100 - (meta.stacks.length) * 5}%` })
+        div.container(style={ 'max-height': `${100 - (meta.stacks.length) * 5}%` })
           each key in meta.background.keys
             div.animated-load
               +router(key)

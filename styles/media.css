@@ -68,12 +68,12 @@ No media query since this is the default in Bootstrap because it is "mobile firs
     font-size: 1rem;
   }
   figure.avatar.avatar-xl {
-    height: 8rem;
-    width: 8rem;
+    height: 6rem;
+    width: 6rem;
   }
   section.background div.container {
     padding: 2rem 3rem;
-    height: 95% !important;
+    max-height: 95% !important;
   }
   span.stacks {
     position: absolute;
@@ -101,11 +101,7 @@ No media query since this is the default in Bootstrap because it is "mobile firs
   }
   section.draggable .container {
     padding: 0.4rem 1rem !important;
-    height: 100% !important;
-  }
-  section.draggable article {
-    overflow-y: scroll;
-    max-height: 95%;
+    max-height: 100% !important;
   }
 
   i.invert {

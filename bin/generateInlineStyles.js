@@ -110,7 +110,7 @@ module.exports = meta => {
           const varColor = backgroundEqualsFont ? change(color, 30) : color;
 
           const suffix = style === 'color' ? '' : `.${style}`;
-          const dynStackSelector = `main${suffix}, main${suffix} ${selector}`;
+          const dynStackSelector = `main${suffix} ${selector}`;
 
           return {
             ...redStyle,
