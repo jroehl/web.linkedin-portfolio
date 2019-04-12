@@ -49,6 +49,21 @@ const drag = (section, deltaY) => {
 };
 
 /**
+ * Log stack action to google analytics
+ *
+ * @param {HTMLElement} el
+ * @param {string} action
+ * @param {string} stack
+ */
+const stackClick = (el, action, stack) => {
+  if (!stack && el) {
+    const h2 = el.querySelector('h2');
+    stack = h2 ? h2.textContent : 'no_heading_found';
+  }
+  window.gtag('event', action, { event_category: 'stacks', event_label: 'ui', stack });
+};
+
+/**
  * Initialize the stack interaction
  * @param {string} mediaQuery
  * @param {number} [threshold=100]
@@ -60,6 +75,7 @@ module.exports = (mediaQuery, threshold = 100) => {
 
   document.querySelector('section.background').addEventListener('click', () => {
     reset(draggable);
+    stackClick(undefined, 'stack_click', 'reset all');
   });
 
   if (mediaQuery === 'xl') {
@@ -67,6 +83,7 @@ module.exports = (mediaQuery, threshold = 100) => {
       el.addEventListener('click', evt => {
         evt.stopPropagation();
         el.classList.toggle('clicked');
+        stackClick(el, 'stack_click');
       })
     );
     return;
@@ -105,11 +122,13 @@ module.exports = (mediaQuery, threshold = 100) => {
     const shouldExpand = initialPosition - threshold > deltaY || clickExpand;
     if (!shouldExpand) {
       draggable.slice(idx - 1).forEach(collapse);
+      stackClick(el, 'stack_collapse');
     } else {
       const stacks = [...draggable];
       const stacked = stacks.splice(0, idx);
       const dragging = stacks.filter(({ classList }) => classList.contains('dragging'));
       [...stacked, ...dragging].forEach(expand);
+      stackClick(el, 'stack_expand');
     }
   };
 

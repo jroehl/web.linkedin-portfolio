@@ -6,7 +6,7 @@
   "scripts": {
     "start": "rimraf .cache && npm run fetch_data && parcel templates/index.pug templates/404.pug",
     "fetch_data": "node bin/fetchData.js",
-    "build": "rimraf dist && npm run fetch_data && parcel build templates/index.pug templates/404.pug && npm run generate_meta_files",
+    "build": "rimraf .cache && rimraf dist && npm run fetch_data && parcel build templates/index.pug templates/404.pug && npm run generate_meta_files",
     "generate_meta_files": "node bin/generateMetaFiles.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

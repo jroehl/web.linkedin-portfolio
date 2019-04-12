@@ -1,0 +1,18 @@
+mixin addGa(pagePath, pageTitle)
+  if config.gaTrackingId && config.isProduction
+    - console.log(`Setting up Google Analytics for "${pagePath} (${pageTitle})" | ${config.env}`);
+    // Global site tag (gtag.js) - Google Analytics
+    script(async='', src=`https://www.googletagmanager.com/gtag/js?id=${config.gaTrackingId}`)
+    script.
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = function(){dataLayer.push(arguments);};
+      window.gtag('js', new Date());
+      window.gtag('config', '!{config.gaTrackingId}', {
+        page_title: '!{pageTitle}',
+        page_path: '!{pagePath}',
+        custom_map: {
+          dimension1: 'stack',
+          dimension2: 'color',
+          dimension2: 'href'
+        }
+      });

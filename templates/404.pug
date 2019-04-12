@@ -1,5 +1,6 @@
-include ./sections.pug
 include ./ie.pug
+include ./ga.pug
+include ./utils.pug
 
 -
   const {
@@ -15,6 +16,7 @@ include ./ie.pug
 doctype html
 html(lang="en")
   head
+    +addGa('/404', '404')
     title=`404 | ${name} - ${profile.headline}`
     meta(charset='utf-8')
     meta(name='viewport', content='width=device-width, initial-scale=1, user-scalable=no')
@@ -32,3 +34,4 @@ html(lang="en")
           span=`If you think that is a mistake, please get in touch with ${name} `
           a(href=`mailto:${email.emailaddress}`)=`<${email.emailaddress}>`
         h4(href='/') BACK TO MAIN PAGE
+    +addGlobals()

@@ -1,6 +1,6 @@
-include ./styling.pug
 include ./sections.pug
 include ./ie.pug
+include ./ga.pug
 
 -
   const {
@@ -16,6 +16,7 @@ include ./ie.pug
 doctype html
 html(class="no-js", lang="en")
   head
+    +addGa('/', 'index')
     title=`${name} - ${profile.headline}`
     meta(charset='utf-8')
     meta(name='viewport', content='width=device-width, initial-scale=1, user-scalable=no')
@@ -47,5 +48,5 @@ html(class="no-js", lang="en")
       span.stacks
         each section, i in meta.stacks
           +renderStack(section, i + 1, meta.stacks)
-    script const palettes = !{JSON.stringify(config.palettes)}
+    +addGlobals()
     script(src='../src/index.js')
