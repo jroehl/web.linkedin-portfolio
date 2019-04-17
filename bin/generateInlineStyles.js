@@ -1,5 +1,11 @@
 const tinycolor = require('tinycolor2');
 const config = require('../config');
+const { fetchNeeded } = require('./fetchFontData');
+
+const tags = {
+  headings: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'],
+  text: ['p', 'a', 'b', 'strong', 'em', 'mark', 'sub', 'sup', 'small', 'del', 'ins', 'blockquote'],
+};
 
 /**
  * Generate the different color variants
@@ -74,7 +80,25 @@ const change = (color, amt = 5) => {
   return col.isDark() ? col.lighten(amt) : col.darken(amt);
 };
 
-module.exports = meta => {
+const buildDynamicSelector = (selector, tags) => tags.map(tag => `${selector} ${tag}`).join(', ');
+
+const buildDynamicBlock = (selector, properties, types = ['headings', 'text']) => {
+  return types.reduce(
+    (red, type) => ({
+      ...red,
+      [buildDynamicSelector(selector, tags[type])]: Object.entries(properties).reduce(
+        (red, [key, value]) => ({
+          ...red,
+          [key]: value[type],
+        }),
+        {}
+      ),
+    }),
+    {}
+  );
+};
+
+module.exports = async meta => {
   console.log(`Generating dynamic color palettes: "${config.palettes.join('", "')}"`);
 
   const styleSets = [
@@ -84,6 +108,9 @@ module.exports = meta => {
     },
     ...meta.stacks.map((stack, i) => ({ ...stack, selector: `section#stack-${i + 1}` })),
   ];
+
+  const families = meta.stacks.reduce((red, { headings, text }) => [...red, headings.split(' | ')[0], text.split(' | ')[0]], []);
+  const { fontData, googleImport } = await fetchNeeded(families);
 
   const style = {
     // create background animation delays
@@ -96,18 +123,34 @@ module.exports = meta => {
       };
     }, {}),
     // create stack styles
-    ...styleSets.reduce((red, { backgroundcolor, fontcolor, selector }) => {
+    ...styleSets.reduce((red, { backgroundcolor, headings, text, selector }) => {
       const bgCol = generateVariants(backgroundcolor);
-      const fontCol = generateVariants(fontcolor);
+      const [headingsFont, headingsCol] = headings.split(' | ');
+      const [textFont, textCol] = text.split(' | ');
+      const cssImports = {
+        text: fontData[textFont].cssFontFamily,
+        headings: fontData[headingsFont].cssFontFamily,
+      };
+
+      const textColVariants = generateVariants(textCol);
+      const headingsColVariants = generateVariants(headingsCol);
       return {
         ...red,
         ...config.palettes.reduce((redStyle, style) => {
           const backgroundColor = bgCol[style];
-          const color = fontCol[style];
+          const colors = {
+            text: textColVariants[style],
+            headings: headingsColVariants[style],
+          };
 
           const backgroundColorIsDark = tinycolor(backgroundColor).isDark();
-          const backgroundEqualsFont = tinycolor.equals(tinycolor(backgroundColor), tinycolor(color));
-          const varColor = backgroundEqualsFont ? change(color, 30) : color;
+
+          const backgroundEqualsTextFont = tinycolor.equals(tinycolor(backgroundColor), tinycolor(colors.text));
+          const backgroundEqualsHeadingsFont = tinycolor.equals(tinycolor(backgroundColor), tinycolor(colors.headings));
+          const varColors = {
+            text: backgroundEqualsTextFont ? change(colors.text, 30) : colors.text,
+            headings: backgroundEqualsHeadingsFont ? change(colors.headings, 30) : colors.headings,
+          };
 
           const suffix = style === 'color' ? '' : `.${style}`;
           const dynStackSelector = `main${suffix} ${selector}`;
@@ -117,34 +160,40 @@ module.exports = meta => {
             [dynStackSelector]: {
               'background-color': backgroundColor,
             },
-            [`${dynStackSelector}, ${dynStackSelector} a, ${dynStackSelector} i`]: {
-              color: varColor,
-            },
+            ...buildDynamicBlock(dynStackSelector, { color: varColors, 'font-family': cssImports }),
             [`${dynStackSelector} a:visited, ${dynStackSelector} a.variant:visited`]: {
-              color: darken(color),
+              color: darken(colors.text),
             },
             [`${dynStackSelector} a.variant:visited`]: {
-              color: darken(change(color, 15)),
+              color: darken(change(colors.text, 15)),
             },
             [`${dynStackSelector} a:hover`]: {
-              color: lighten(color),
+              color: lighten(colors.text),
             },
             [`${dynStackSelector} a.variant:hover`]: {
-              color: lighten(change(color, 15)),
+              color: lighten(change(colors.text, 15)),
             },
-            [`${dynStackSelector} .variant`]: {
-              color: change(color, 15),
-            },
+            ...buildDynamicBlock(`${dynStackSelector} .variant`, {
+              color: {
+                headings: change(colors.headings, 15),
+                text: change(colors.text, 15),
+              },
+            }),
             [`${dynStackSelector} .chip`]: {
               background: change(backgroundColor, 30),
-              color: backgroundColorIsDark ? lighten(color, 30) : darken(color, 30),
             },
+            ...buildDynamicBlock(`${dynStackSelector} .chip`, {
+              color: {
+                headings: backgroundColorIsDark ? lighten(colors.headings, 30) : darken(colors.headings, 30),
+                text: backgroundColorIsDark ? lighten(colors.text, 30) : darken(colors.text, 30),
+              },
+            }),
             [`${dynStackSelector} .timeline .timeline-item .timeline-icon.icon-lg, ${dynStackSelector}
         .timeline .timeline-item .timeline-icon::before, ${dynStackSelector} blockquote`]: {
-              'border-color': varColor,
+              'border-color': varColors.text,
             },
             [`${dynStackSelector} .timeline .timeline-item::before`]: {
-              background: color,
+              background: colors.text,
             },
           };
         }, {}),
@@ -158,5 +207,5 @@ module.exports = meta => {
     }, '')}}`;
   }, '');
 
-  return styleString;
+  return `${googleImport}${styleString}`;
 };

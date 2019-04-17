@@ -101,7 +101,7 @@ const fetchData = async () => {
 
   const { stacks, background } = sections.reduce(
     (red, section) => {
-      if (section.header === '$BACKGROUND') {
+      if (section.title === '$BACKGROUND') {
         return { ...red, background: section };
       }
       return { ...red, stacks: [...red.stacks, section] };
@@ -125,7 +125,7 @@ const fetchData = async () => {
     },
     meta: {
       ...meta,
-      inlineStyles: generateInlineStyles(meta),
+      inlineStyles: await generateInlineStyles(meta),
     },
   };
 };

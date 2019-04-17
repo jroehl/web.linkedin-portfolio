@@ -246,7 +246,7 @@ mixin renderStack(section, i, sections)
     div.container(style={
       height: `calc(${100 - 5 * revIdx}% - 1rem)`
     })
-      h2=section.header
+      h2=section.title
       div.articles
         each key in section.keys
           +router(key)
