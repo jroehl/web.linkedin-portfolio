@@ -122,13 +122,13 @@ module.exports = (mediaQuery, threshold = 100) => {
     const shouldExpand = initialPosition - threshold > deltaY || clickExpand;
     if (!shouldExpand) {
       draggable.slice(idx - 1).forEach(collapse);
-      stackClick(el, 'stack_collapse');
+      stackClick(target, 'stack_collapse');
     } else {
       const stacks = [...draggable];
       const stacked = stacks.splice(0, idx);
       const dragging = stacks.filter(({ classList }) => classList.contains('dragging'));
       [...stacked, ...dragging].forEach(expand);
-      stackClick(el, 'stack_expand');
+      stackClick(target, 'stack_expand');
     }
   };
 
