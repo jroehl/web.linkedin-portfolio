@@ -12,7 +12,7 @@
 ## Explanation
 
 This Google spreadsheet add-on enhances a document to serve as the back-end of a website, based on data of a [LinkedIn](https://linkedin.com) export.
-The resulting [website](https:/johannroehl.de?utm-source={{UTM_SOURCE}}) is hosted with [Netlify](https://netlify.com) and customisable to a certain extent with the help of the worksheet data.
+The resulting [website](https:/johannroehl.de/?utm-source={{UTM_SOURCE}}) is hosted with [Netlify](https://netlify.com) and customisable to a certain extent with the help of the worksheet data.
 
 ## HowTo
 
@@ -39,4 +39,4 @@ LinkedIn Portfolio
 [Frontend Repository](https://github.com/jroehl/web.linkedin-portfolio)  
 [Sheets (Backend) Repository](http://github.com/jroehl/linkedin-portfolio-backend/)  
 
-© 2013 - 2019 [johannroehl](https:/johannroehl.de?utm-source={{UTM_SOURCE}})
+© 2013 - 2019 [johannroehl](https:/johannroehl.de/?utm-source={{UTM_SOURCE}})
