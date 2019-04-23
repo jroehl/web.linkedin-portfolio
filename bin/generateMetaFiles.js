@@ -3,7 +3,7 @@ const { resolve } = require('path');
 
 require('dotenv').config();
 
-const { URL: domain, BUILD_ENV } = process.env;
+const { URL: domain, BUILD_ENV, GOOGLE_ANALYTICS } = process.env;
 
 process.stdout.write('Generating "robots.txt"');
 
@@ -24,6 +24,15 @@ const lastMod = new Date().toJSON().slice(0, 10);
 
 const separator = domain.slice(-1) === '/' ? '' : '/';
 
+let setup = '';
+if (GOOGLE_ANALYTICS) {
+  setup = `
+  <url>
+    <loc>${`${domain}${separator}privacy-policy`}</loc>
+    <lastmod>${lastMod}</lastmod>
+  </url>`;
+}
+
 const xml = `\
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -31,6 +40,14 @@ const xml = `\
     <loc>${`${domain}${separator}`}</loc>
     <lastmod>${lastMod}</lastmod>
   </url>
+  <url>
+    <loc>${`${domain}${separator}linkedin-portfolio-website`}</loc>
+    <lastmod>${lastMod}</lastmod>
+  </url>
+  <url>
+    <loc>${`${domain}${separator}imprint`}</loc>
+    <lastmod>${lastMod}</lastmod>
+  </url>${setup}
   <url>
     <loc>${`${domain}${separator}404`}</loc>
     <lastmod>${lastMod}</lastmod>

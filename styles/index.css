@@ -85,6 +85,21 @@ section.background {
   height: 100%;
 }
 
+nav {
+  padding-top: 2rem;
+}
+
+nav a:last-child {
+  display: block;
+}
+
+nav a {
+  text-transform: uppercase;
+  padding-right: 1rem;
+  padding-bottom: 1rem;
+  white-space: pre-wrap;
+}
+
 section.background h2 {
   margin-bottom: 0;
 }

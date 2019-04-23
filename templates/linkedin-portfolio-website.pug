@@ -1,0 +1,20 @@
+include ./ie.pug
+include ./ga.pug
+include ./utils.pug
+
+doctype html
+html(lang='en')
+  head
+    +addGa('/linkedin-portfolio-website', 'LinkedIn Portfolio Website')
+    title=`LinkedIn Portfolio Website`
+    meta(charset='utf-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1, user-scalable=no')
+    meta(name='description', content='This add-on enhances a google sheet document to serve as the back-end of a website, based on data of a LinkedIn export.')
+    meta(name='author', content='Johann Röhl')
+    +ieStyle('if lte IE 11')
+    link(rel='stylesheet', href='../styles/linkedin-portfolio-website.css')
+    link(rel='shortcut icon' href='../assets/favicon.ico')
+  body
+    +ieElements()
+    main !{markdown.linkedinPortfolioWebsite}
+    +addGlobals()

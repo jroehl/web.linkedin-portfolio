@@ -10,11 +10,12 @@ include ./ga.pug
     EMAIL_ADDRESSES: {
       values: [email],
     },
+    MISC: {
+      name
+    },
   } = data;
-
-  const name = getName(profile);
 doctype html
-html(class="no-js", lang="en")
+html(class='no-js', lang='en')
   head
     +addGa('/', 'index')
     title=`${name} - ${profile.headline}`
@@ -23,9 +24,9 @@ html(class="no-js", lang="en")
     meta(name='description', content=profile.summary)
     meta(name='author', content=name)
     +ieStyle('if lte IE 11')
-    link(rel="stylesheet", href="../styles/index.css")
-    link(rel="stylesheet", href="../styles/media.css")
-    link(rel="shortcut icon" href=email.favicon)
+    link(rel='stylesheet', href='../styles/index.css')
+    link(rel='stylesheet', href='../styles/media.css')
+    link(rel='shortcut icon' href=email.favicon)
     link(
       rel='stylesheet',
       href='https://use.fontawesome.com/releases/v5.7.2/css/all.css',
@@ -45,6 +46,12 @@ html(class="no-js", lang="en")
           each key in meta.background.keys
             div.animated-load
               +router(key)
+          nav.animated-load
+            h3 navigation
+            a(href='/imprint') Imprint
+            if config.hasGA
+              a(href='/privacy-policy') Privacy policy
+            a(href='/linkedin-portfolio-website') Linkedin Portfolio Website
       span.stacks
         each section, i in meta.stacks
           +renderStack(section, i + 1, meta.stacks)

@@ -1,10 +1,10 @@
 include ./utils.pug
 
-mixin renderHeader({ PROFILE, EMAIL_ADDRESSES })
+mixin renderHeader({ PROFILE, EMAIL_ADDRESSES, MISC })
   -
     const { values: [profile] } = PROFILE;
     const { values: [email] } = EMAIL_ADDRESSES;
-    const name = getName(profile);
+    const { name } = MISC;
   header.animated-load
     div
       h1=name

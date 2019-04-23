@@ -118,9 +118,21 @@ const fetchData = async () => {
     spreadsheetId,
   };
 
+  const {
+    PROFILE: {
+      values: [{ firstname, lastname, maidenname }],
+    },
+  } = data;
+
+  let name = `${firstname} ${lastname}`;
+  if (maidenname) {
+    name += ` (${maidenname})`;
+  }
+
   return {
     data: {
       ...data,
+      MISC: { name },
       EMAIL_ADDRESSES: emailAddresses,
     },
     meta: {

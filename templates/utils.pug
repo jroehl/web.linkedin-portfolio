@@ -31,11 +31,3 @@ mixin addGlobals()
     if (from) return from;
     return '';
   };
-
-  const getName = ({ firstname, lastname, maidenname }) => {
-    let name = `${firstname} ${lastname}`;
-    if (maidenname) {
-      name += ` (${maidenname})`;
-    }
-    return name;
-  };
