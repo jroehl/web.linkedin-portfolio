@@ -1,4 +1,4 @@
-@import '../node_modules/spectre.css/dist/spectre.min.css';
+@import './standard.css';
 @import '../node_modules/spectre.css/dist/spectre-exp.min.css';
 
 html {
@@ -12,9 +12,12 @@ main {
   width: 100%;
 }
 
+body {
+  padding: 0;
+}
+
 main {
   position: relative;
-  font-size: 0.9rem;
   overflow: hidden;
 }
 
@@ -30,12 +33,14 @@ main section a:visited,
 h1 {
   font-size: 1.7rem;
   margin-bottom: 0.3rem;
+  text-align: unset;
 }
 h2 {
   text-transform: uppercase;
   font-weight: bold;
   font-size: 1rem;
   margin-bottom: 1.4rem;
+  padding-top: unset;
 }
 
 h3 {
@@ -46,34 +51,12 @@ h4 {
   font-size: 1rem;
 }
 
-a {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  z-index: 10;
-}
-
 p {
   margin-bottom: 0.2rem;
 }
 
 i {
   width: 1rem !important;
-}
-
-article.warn {
-  position: fixed;
-  z-index: 10;
-  top: 0;
-  left: 0;
-  right: 0;
-  background-color: rgba(244, 67, 54, 0.86);
-}
-
-article.warn h4 {
-  text-align: center;
-  margin: 1rem;
-  color: white;
 }
 
 .container {
@@ -83,21 +66,6 @@ article.warn h4 {
 
 section.background {
   height: 100%;
-}
-
-nav {
-  padding-top: 2rem;
-}
-
-nav a:last-child {
-  display: block;
-}
-
-nav a {
-  text-transform: uppercase;
-  padding-right: 1rem;
-  padding-bottom: 1rem;
-  white-space: pre-wrap;
 }
 
 section.background h2 {
@@ -134,37 +102,10 @@ section.background blockquote {
   margin-inline-end: 0;
 }
 
-section.background div.container > div.animated-load,
-i.invert {
-  opacity: 0;
-  transform: translateY(-25%);
-  animation-duration: 500ms;
-  animation-fill-mode: forwards;
-  animation-name: appear;
-  animation-timing-function: var(--transition-timing);
-  animation-delay: 2000ms;
-}
-
 section.background div.container > div.animated-load {
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
-}
-
-i.invert {
-  position: absolute;
-  right: 1.5rem;
-  bottom: 1rem;
-  font-size: 1.5rem;
-  z-index: 1;
-  cursor: pointer;
-}
-
-@keyframes appear {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
 
 section.draggable {

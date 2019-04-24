@@ -1,0 +1,101 @@
+@import '../node_modules/spectre.css/dist/spectre.min.css';
+@import '../node_modules/cookieconsent/build/cookieconsent.min.css';
+
+html {
+  height: 100%;
+}
+
+body {
+  padding: 2rem;
+  font-size: 0.9rem;
+}
+
+h1 {
+  text-align: center;
+}
+
+h2 {
+  padding-top: 1.5rem;
+}
+
+a {
+  text-decoration: underline;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  z-index: 10;
+}
+
+nav {
+  padding-top: 2rem;
+}
+
+nav a:last-child {
+  display: block;
+}
+
+nav a {
+  text-transform: uppercase;
+  padding-right: 1rem;
+  padding-bottom: 1rem;
+}
+
+i.invert {
+  position: fixed;
+  right: 1.5rem;
+  bottom: 1rem;
+  font-size: 1.5rem;
+  z-index: 1;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(-25%);
+  animation-duration: 500ms;
+  animation-fill-mode: forwards;
+  animation-name: appear;
+  animation-timing-function: var(--transition-timing);
+  animation-delay: 2000ms;
+}
+
+article.warn {
+  position: fixed;
+  z-index: 10;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(244, 67, 54, 0.86);
+}
+
+article.warn h4 {
+  text-align: center;
+  margin: 1rem;
+  color: white;
+}
+
+.cc-link {
+  display: inline !important;
+  padding: 0 !important;
+}
+
+@keyframes appear {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (min-width: 992px) {
+  body {
+    padding: 5rem 20rem;
+  }
+  h2 {
+    padding-top: 2rem;
+  }
+  nav a:last-child {
+    display: inline;
+  }
+}
+
+@media (min-width: 1200px) {
+  article.warn {
+    display: block !important;
+  }
+}

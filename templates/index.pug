@@ -14,6 +14,7 @@ include ./ga.pug
       name
     },
   } = data;
+  const inlineStyles = `${meta.inlineStyles.import}${meta.inlineStyles.base}${meta.inlineStyles.index}`;
 doctype html
 html(class='no-js', lang='en')
   head
@@ -33,7 +34,7 @@ html(class='no-js', lang='en')
       integrity='sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr',
       crossorigin='anonymous'
     )
-    style !{meta.inlineStyles}
+    style !{inlineStyles}
   body
 
     +ieElements()
@@ -46,12 +47,7 @@ html(class='no-js', lang='en')
           each key in meta.background.keys
             div.animated-load
               +router(key)
-          nav.animated-load
-            h3 navigation
-            a(href='/imprint') Imprint
-            if config.hasGA
-              a(href='/privacy-policy') Privacy policy
-            a(href='/linkedin-portfolio-website') Linkedin Portfolio Website
+          +addNav()
       span.stacks
         each section, i in meta.stacks
           +renderStack(section, i + 1, meta.stacks)
