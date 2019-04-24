@@ -2,6 +2,7 @@ include ./ie.pug
 include ./ga.pug
 include ./utils.pug
 
+- const inlineStyles = `${meta.inlineStyles.import}${meta.inlineStyles.base}`;
 doctype html
 html(lang='en')
   head
@@ -14,8 +15,19 @@ html(lang='en')
     +ieStyle('if lte IE 11')
     link(rel='stylesheet', href='../styles/standard.css')
     link(rel='shortcut icon' href='../assets/favicon.ico')
+    link(
+      rel='stylesheet',
+      href='https://use.fontawesome.com/releases/v5.7.2/css/all.css',
+      integrity='sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr',
+      crossorigin='anonymous'
+    )
+    style !{inlineStyles}
   body
     +ieElements()
+    article.warn(style={ display: 'none' })
+      h4 This website is optimized for mobile devices
     main !{markdown.linkedinPortfolioWebsite}
+    i.fas.fa-palette.invert
     +addNav()
     +addGlobals()
+    script(src='../src/standard.js')

@@ -14,6 +14,7 @@ include ./ga.pug
       name
     },
   } = data;
+  const inlineStyles = `${meta.inlineStyles.import}${meta.inlineStyles.base}${meta.inlineStyles.index}`;
 doctype html
 html(class='no-js', lang='en')
   head
@@ -33,7 +34,7 @@ html(class='no-js', lang='en')
       integrity='sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr',
       crossorigin='anonymous'
     )
-    style !{meta.inlineStyles}
+    style !{inlineStyles}
   body
 
     +ieElements()

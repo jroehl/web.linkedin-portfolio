@@ -4,7 +4,7 @@ const { fetchNeeded } = require('./fetchFontData');
 
 const tags = {
   headings: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'],
-  text: ['p', 'a', 'b', 'strong', 'em', 'mark', 'sub', 'sup', 'small', 'del', 'ins', 'blockquote'],
+  text: ['p', 'a', 'b', 'strong', 'em', 'mark', 'sub', 'sup', 'small', 'del', 'ins', 'blockquote', 'span'],
 };
 
 /**
@@ -98,21 +98,100 @@ const buildDynamicBlock = (selector, properties, types = ['headings', 'text']) =
   );
 };
 
+const buildDynamicStyles = (sets, fontData, bgContrast) =>
+  sets.reduce((red, { backgroundcolor, headings, text, selector }) => {
+    const bgCol = generateVariants(backgroundcolor);
+    const [headingsFont, headingsCol] = headings.split(' | ');
+    const [textFont, textCol] = text.split(' | ');
+    const cssImports = {
+      text: fontData[textFont].cssFontFamily,
+      headings: fontData[headingsFont].cssFontFamily,
+    };
+
+    const textColVariants = generateVariants(textCol);
+    const headingsColVariants = generateVariants(headingsCol);
+    return {
+      ...red,
+      ...config.palettes.reduce((redStyle, style) => {
+        const backgroundColor = bgContrast ? change(bgCol[style], 1) : bgCol[style];
+
+        const colors = {
+          text: textColVariants[style],
+          headings: headingsColVariants[style],
+        };
+
+        const backgroundColorIsDark = tinycolor(backgroundColor).isDark();
+
+        const backgroundEqualsTextFont = tinycolor.equals(tinycolor(backgroundColor), tinycolor(colors.text));
+        const backgroundEqualsHeadingsFont = tinycolor.equals(tinycolor(backgroundColor), tinycolor(colors.headings));
+        const varColors = {
+          text: backgroundEqualsTextFont ? change(colors.text, 30) : colors.text,
+          headings: backgroundEqualsHeadingsFont ? change(colors.headings, 30) : colors.headings,
+        };
+
+        const suffix = style === 'color' ? '' : `.${style}`;
+        const dynStackSelector = `body${suffix} ${selector}`;
+
+        return {
+          ...redStyle,
+          [dynStackSelector]: {
+            'background-color': backgroundColor,
+            color: colors.headings,
+          },
+          ...buildDynamicBlock(dynStackSelector, { color: varColors, 'font-family': cssImports }),
+          [`${dynStackSelector} a:visited, ${dynStackSelector} a.variant:visited`]: {
+            color: darken(colors.text),
+          },
+          [`${dynStackSelector} a.variant:visited`]: {
+            color: darken(change(colors.text, 15)),
+          },
+          [`${dynStackSelector} a:hover`]: {
+            color: lighten(colors.text),
+          },
+          [`${dynStackSelector} a.variant:hover`]: {
+            color: lighten(change(colors.text, 15)),
+          },
+          ...buildDynamicBlock(`${dynStackSelector} .variant`, {
+            color: {
+              headings: change(colors.headings, 15),
+              text: change(colors.text, 15),
+            },
+          }),
+          [`${dynStackSelector} .chip`]: {
+            background: change(backgroundColor, 30),
+          },
+          ...buildDynamicBlock(`${dynStackSelector} .chip`, {
+            color: {
+              headings: backgroundColorIsDark ? lighten(colors.headings, 30) : darken(colors.headings, 30),
+              text: backgroundColorIsDark ? lighten(colors.text, 30) : darken(colors.text, 30),
+            },
+          }),
+          [`${dynStackSelector} .timeline .timeline-item .timeline-icon.icon-lg, ${dynStackSelector}
+    .timeline .timeline-item .timeline-icon::before, ${dynStackSelector} blockquote`]: {
+            'border-color': varColors.text,
+          },
+          [`${dynStackSelector} .timeline .timeline-item::before`]: {
+            background: colors.text,
+          },
+        };
+      }, {}),
+    };
+  }, {});
+
+const generateCss = style =>
+  Object.keys(style).reduce((styleString, selector) => {
+    return `${styleString}${selector}{${Object.entries(style[selector]).reduce((styleString, [propName, propValue]) => {
+      return `${styleString}${propName}:${propValue};`;
+    }, '')}}`;
+  }, '');
+
 module.exports = async meta => {
   console.log(`Generating dynamic color palettes: "${config.palettes.join('", "')}"`);
-
-  const styleSets = [
-    {
-      ...meta.background,
-      selector: 'section.background',
-    },
-    ...meta.stacks.map((stack, i) => ({ ...stack, selector: `section#stack-${i + 1}` })),
-  ];
 
   const families = meta.stacks.reduce((red, { headings, text }) => [...red, headings.split(' | ')[0], text.split(' | ')[0]], []);
   const { fontData, googleImport } = await fetchNeeded(families);
 
-  const style = {
+  const indexStyle = {
     // create background animation delays
     ...meta.background.keys.reduce((red, _, i) => {
       return {
@@ -123,89 +202,43 @@ module.exports = async meta => {
       };
     }, {}),
     // create stack styles
-    ...styleSets.reduce((red, { backgroundcolor, headings, text, selector }) => {
-      const bgCol = generateVariants(backgroundcolor);
-      const [headingsFont, headingsCol] = headings.split(' | ');
-      const [textFont, textCol] = text.split(' | ');
-      const cssImports = {
-        text: fontData[textFont].cssFontFamily,
-        headings: fontData[headingsFont].cssFontFamily,
-      };
-
-      const textColVariants = generateVariants(textCol);
-      const headingsColVariants = generateVariants(headingsCol);
-      return {
-        ...red,
-        ...config.palettes.reduce((redStyle, style) => {
-          const backgroundColor = bgCol[style];
-          const colors = {
-            text: textColVariants[style],
-            headings: headingsColVariants[style],
-          };
-
-          const backgroundColorIsDark = tinycolor(backgroundColor).isDark();
-
-          const backgroundEqualsTextFont = tinycolor.equals(tinycolor(backgroundColor), tinycolor(colors.text));
-          const backgroundEqualsHeadingsFont = tinycolor.equals(tinycolor(backgroundColor), tinycolor(colors.headings));
-          const varColors = {
-            text: backgroundEqualsTextFont ? change(colors.text, 30) : colors.text,
-            headings: backgroundEqualsHeadingsFont ? change(colors.headings, 30) : colors.headings,
-          };
-
-          const suffix = style === 'color' ? '' : `.${style}`;
-          const dynStackSelector = `main${suffix} ${selector}`;
-
-          return {
-            ...redStyle,
-            [dynStackSelector]: {
-              'background-color': backgroundColor,
-            },
-            ...buildDynamicBlock(dynStackSelector, { color: varColors, 'font-family': cssImports }),
-            [`${dynStackSelector} a:visited, ${dynStackSelector} a.variant:visited`]: {
-              color: darken(colors.text),
-            },
-            [`${dynStackSelector} a.variant:visited`]: {
-              color: darken(change(colors.text, 15)),
-            },
-            [`${dynStackSelector} a:hover`]: {
-              color: lighten(colors.text),
-            },
-            [`${dynStackSelector} a.variant:hover`]: {
-              color: lighten(change(colors.text, 15)),
-            },
-            ...buildDynamicBlock(`${dynStackSelector} .variant`, {
-              color: {
-                headings: change(colors.headings, 15),
-                text: change(colors.text, 15),
-              },
-            }),
-            [`${dynStackSelector} .chip`]: {
-              background: change(backgroundColor, 30),
-            },
-            ...buildDynamicBlock(`${dynStackSelector} .chip`, {
-              color: {
-                headings: backgroundColorIsDark ? lighten(colors.headings, 30) : darken(colors.headings, 30),
-                text: backgroundColorIsDark ? lighten(colors.text, 30) : darken(colors.text, 30),
-              },
-            }),
-            [`${dynStackSelector} .timeline .timeline-item .timeline-icon.icon-lg, ${dynStackSelector}
-        .timeline .timeline-item .timeline-icon::before, ${dynStackSelector} blockquote`]: {
-              'border-color': varColors.text,
-            },
-            [`${dynStackSelector} .timeline .timeline-item::before`]: {
-              background: colors.text,
-            },
-          };
-        }, {}),
-      };
-    }, {}),
+    ...buildDynamicStyles(
+      [
+        {
+          ...meta.background,
+          selector: 'section.background',
+        },
+        ...meta.stacks.map((stack, i) => ({ ...stack, selector: `section#stack-${i + 1}` })),
+      ],
+      fontData
+    ),
   };
 
-  const styleString = Object.keys(style).reduce((styleString, selector) => {
-    return `${styleString}${selector}{${Object.entries(style[selector]).reduce((styleString, [propName, propValue]) => {
-      return `${styleString}${propName}:${propValue};`;
-    }, '')}}`;
-  }, '');
+  const baseStyle = {
+    ...buildDynamicStyles(
+      [
+        {
+          ...meta.background,
+          selector: '',
+        },
+      ],
+      fontData
+    ),
+    ...buildDynamicStyles(
+      [
+        {
+          ...meta.background,
+          selector: '.cc-window',
+        },
+      ],
+      fontData,
+      true
+    ),
+  };
 
-  return `${googleImport}${styleString}`;
+  return {
+    import: googleImport,
+    base: generateCss(baseStyle),
+    index: generateCss(indexStyle),
+  };
 };

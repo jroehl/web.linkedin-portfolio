@@ -14,6 +14,7 @@ include ./utils.pug
       name
     },
   } = data;
+  const inlineStyles = `${meta.inlineStyles.import}${meta.inlineStyles.base}`;
 doctype html
 html(lang='en')
   head
@@ -24,10 +25,21 @@ html(lang='en')
     meta(name='description', content=`Imprint of ${name}'s personal website`)
     meta(name='author', content=name)
     +ieStyle('if lte IE 11')
-    link(rel='stylesheet', href='../styles/legal.css')
+    link(rel='stylesheet', href='../styles/standard.css')
     link(rel='shortcut icon' href=email.favicon)
+    link(
+      rel='stylesheet',
+      href='https://use.fontawesome.com/releases/v5.7.2/css/all.css',
+      integrity='sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr',
+      crossorigin='anonymous'
+    )
+    style !{inlineStyles}
   body
     +ieElements()
+    article.warn(style={ display: 'none' })
+      h4 This website is optimized for mobile devices
     main !{markdown.imprint}
+    i.fas.fa-palette.invert
     +addNav()
     +addGlobals()
+    script(src='../src/standard.js')
