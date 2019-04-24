@@ -1,6 +1,13 @@
 mixin addGlobals()
   script window.config=!{JSON.stringify({ palettes: config.palettes, env: config.env, hasGA: config.hasGA })}
 
+mixin addNav()
+  nav.animated-load
+    h3 navigation
+    a(href='/imprint') Imprint
+    if config.hasGA
+      a(href='/privacy-policy') Privacy policy
+    a(href='/linkedin-portfolio-website') Linkedin Portfolio Website
 -
   const convertArray = str => {
     if (!str || !str.startsWith('[') || !str.endsWith(']')) return str;

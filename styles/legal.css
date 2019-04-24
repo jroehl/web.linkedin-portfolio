@@ -1,54 +1,6 @@
-@import url('https://fonts.googleapis.com/css?family=Space+Mono');
-
-@import '../node_modules/spectre.css/dist/spectre.min.css';
+@import './standard.css';
 
 html {
   --bg-color: black;
-}
-
-html {
-  height: 100%;
-  color: white;
-  font-size: 0.9rem;
-}
-
-body {
-  padding: 2rem;
-  color: white;
-  background-color: var(--bg-color);
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: 'Space Mono', monospace;
-  color: white;
-}
-
-h1 {
-  text-align: center;
-}
-
-h2 {
-  padding-top: 1.5rem;
-}
-
-a {
-  color: white !important;
-  text-decoration: underline;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-@media (min-width: 992px) {
-  body {
-    padding: 5rem 25rem;
-  }
-  h2 {
-    padding-top: 2rem;
-  }
+  --ft-color: white;
 }

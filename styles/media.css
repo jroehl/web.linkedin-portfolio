@@ -44,6 +44,9 @@ No media query since this is the default in Bootstrap because it is "mobile firs
     margin-bottom: 1.5rem;
     line-height: unset;
   }
+  nav a:last-child {
+    display: inline;
+  }
 }
 
 /* Extra large devices (large desktops, 1200px and up) */

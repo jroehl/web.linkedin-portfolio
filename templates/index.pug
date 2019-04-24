@@ -46,12 +46,7 @@ html(class='no-js', lang='en')
           each key in meta.background.keys
             div.animated-load
               +router(key)
-          nav.animated-load
-            h3 navigation
-            a(href='/imprint') Imprint
-            if config.hasGA
-              a(href='/privacy-policy') Privacy policy
-            a(href='/linkedin-portfolio-website') Linkedin Portfolio Website
+          +addNav()
       span.stacks
         each section, i in meta.stacks
           +renderStack(section, i + 1, meta.stacks)
