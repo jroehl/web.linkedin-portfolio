@@ -4,6 +4,6 @@
 
 ## Usage
 
-> TODO
+Check out [johannroehl.de](https://johannroehl.de/linkedin-portfolio-website).
 
 [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/jroehl/web.linkedin-portfolio)
