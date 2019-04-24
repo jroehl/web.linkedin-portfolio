@@ -1,8 +1,13 @@
-# web.linkedin-portfolio :construction:
+# web.linkedin-portfolio
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/7066fa12-8c5a-4568-8b20-7333d5909dee/deploy-status)](https://app.netlify.com/sites/linkedin-portfolio/deploys)
 
-The frontend for your personal linkedin portfolio website, build with the [Google Sheet add-on](https://github.com/jroehl/linkedin-portfolio-backend)
+The frontend for your personal LinkedIn portfolio website, build with the [Google Sheet add-on](https://github.com/jroehl/linkedin-portfolio-backend)
+
+- [web.linkedin-portfolio](#weblinkedin-portfolio)
+  - [How To 💁‍♂️](#how-to-️)
+  - [Contributions 🙏🏼](#contributions-)
+  - [License 📄](#license-)
 
 ## How To 💁‍♂️
 

@@ -1,7 +1,7 @@
-Contributing to go-suitesync
+Contributing to web.linkedin-portfolio
 =========================================
 
-I welcome all contributions to go-suitesync
+I welcome all contributions to web.linkedin-portfolio
 
 Issues
 ------
