@@ -39,7 +39,7 @@
     "gravatar": "^1.8.0",
     "hammerjs": "^2.0.8",
     "lodash": "^4.17.11",
-    "postcss-modules": "^1.4.1",
+    "postcss-modules": "^1.5.0",
     "pug": "^2.0.3",
     "request": "^2.88.0",
     "request-promise-native": "^1.0.7",
